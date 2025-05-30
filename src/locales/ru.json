@@ -1,0 +1,68 @@
+{
+	"elements-menu": {
+		"add-element": "Добавить элемент",
+		"add-image": "Фото",
+		"add-text": "Текст"
+	},
+
+	"confirm-action-modal": {
+		"title": "Подтверждение действия",
+		"copy-provider-text": "Вы уверены, что хотите сделать копию поставщика '{{name}}'?",
+		"delete-provider-text": "Вы уверены, что хотите удалить поставщика '{{name}}'?",
+		"copy-preset-text": "Вы уверены, что хотите сделать копию пресета '{{name}}'?",
+		"delete-preset-text": "Вы уверены, что хотите удалить пресет '{{name}}'?",
+		"copy-layout-text": "Вы уверены, что хотите сделать копию макета '{{name}}'?",
+		"delete-layout-text": "Вы уверены, что хотите удалить макет '{{name}}'?",
+		"copy-template-text": "Вы уверены, что хотите сделать копию макета '{{name}}'?",
+		"delete-template-text": "Вы уверены, что хотите удалить макет '{{name}}'?",
+		"confirm": "Подтвердить",
+		"reject": "Отклонить"
+	},
+
+	"manage-fonts-modal": {
+		"title": "Управление шрифтами",
+		"pick-photo-from-pc": "Выберите шрифты с компьютера",
+		"or": "или",
+		"drag-and-drop": "перетащите их в эту область",
+		"drop-for-upload": "Отпустите, чтобы добавить выбранные шрифты",
+		"pick-fonts": "Выбрать шрифты",
+		"upload-picked-photo": "Загрузить выбранные шрифты",
+		"alerts": {
+			"confirm-delete-fonts": "Вы уверены, что хотите удалить выбранные шрифты?"
+		},
+		"errors": {
+			"size-too-big": "Размер шрифта больше 10Мб"
+		}
+	},
+	"upload-photos-modal": {
+		"title": "Загрузка изображений",
+		"pick-photo-from-pc": "Выберите фото с компьютера",
+		"or": "или",
+		"drag-and-drop": "перетащите их в эту область",
+		"drop-for-upload": "Отпустите, чтобы добавить выбранные фото",
+		"pick-photo": "Выбрать фото",
+		"upload-picked-photo": "Загрузить выбранные фото",
+		"alerts": {
+			"confirm-delete-assets": "Вы уверены, что хотите удалить все изображения?"
+		},
+		"errors": {
+			"size-too-big": "Размер изображения больше 10Мб"
+		}
+	},
+	"create-mask-modal": {
+		"title": "Создание маски",
+		"brush-width-palcholder": "Введите размер кисти",
+		"save": "Сохранить маску"
+	},
+
+	"select-with-search": {
+		"search": "Поиск...",
+		"no-options-found": "Варианты не найдены"
+	},
+	"default-select": {
+		"no-options-found": "Варианты не найдены"
+	},
+	"color-picker": {
+		"hex-copied": "Hex скопирован"
+	}
+}

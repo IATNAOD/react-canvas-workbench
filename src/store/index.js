@@ -12,16 +12,17 @@ const sagaMiddleware = createSagaMiddleware();
 export const store = configureStore({
 	reducer: createRootReducer(),
 	preloadedState: {},
-	middleware: () => [
-		sagaMiddleware,
-		createLogger({
-			collapsed: true,
-			duration: true,
-			colors: {
-				title: (action) => loggerActionColors[action.type.split('.')[1]],
-			},
-		}),
-	],
+	middleware: (getDefaultMiddleware) =>
+		getDefaultMiddleware().concat([
+			sagaMiddleware,
+			createLogger({
+				collapsed: true,
+				duration: true,
+				colors: {
+					title: (action) => loggerActionColors[action.type.split('.')[1]],
+				},
+			}),
+		]),
 	devTools: process.env.NODE_ENV !== 'production',
 });
 

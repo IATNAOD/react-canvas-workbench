@@ -1,0 +1,42 @@
+.default-button
+  opacity: 1
+  display: flex
+  cursor: pointer
+  padding: 10px
+  border-radius: 100px
+  align-items: center
+  flex-direction: row
+  background: #7828C8
+  justify-content: center
+  transition: opacity 0.5s ease
+
+  &.disabled
+    cursor: no-drop
+
+  &.info
+    background: #006FEE
+
+  &.secondary
+    background: #71717A
+
+  &.transparent
+    border: 2px solid
+    background: transparent
+
+    &.error
+      border-color: red!important
+
+  .icon-wrapper
+    display: flex
+    flex-direction: row
+    align-items: center
+    justify-content: center
+
+  .text
+    font-size: 16px
+    color: #FFFFFA
+    font-weight: 500
+    line-height: 16px
+
+    @media screen and (max-width: 375px)
+      font-size: 14px
