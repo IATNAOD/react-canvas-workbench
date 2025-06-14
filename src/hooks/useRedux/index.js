@@ -1,5 +1,6 @@
-import { store } from '../../store';
 import { useSyncExternalStore } from 'react';
+
+import { store } from '../../store';
 
 export const useReduxState = (selector) => useSyncExternalStore(store.subscribe, () => selector(store.getState()));
 

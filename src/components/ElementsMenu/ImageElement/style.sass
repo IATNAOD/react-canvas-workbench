@@ -1,0 +1,45 @@
+.image-element-settings
+  gap: 10px
+  width: 100%
+  height: 100%
+  display: flex
+  cursor: default
+  flex-direction: column
+
+  .image-element-settings-upload-wrapper
+    width: 100%
+    display: flex
+    cursor: pointer
+    overflow: hidden
+    aspect-ratio: 1 / 1
+    flex-direction: row
+    align-items: center
+    border-radius: 12px
+    background: #e4d4f4
+    justify-content: center
+    border: 2px solid #7828c8
+
+    input
+      display: none
+
+    .image-element-settings-upload-image
+      width: 100%
+      height: 100%
+      object-fit: cover
+
+  .image-element-settings-row
+    gap: 10px
+    display: flex
+    flex-direction: row
+    align-items: center
+
+  .default-input-wrapper input
+    padding: 10px 16px!important
+    width: calc(100% - 32px)!important
+
+  .default-select-wrapper .default-select-value-wrapper
+    padding: 10px 16px!important
+    width: calc(100% - 32px)!important
+
+    .default-select-value
+      min-height: 15px

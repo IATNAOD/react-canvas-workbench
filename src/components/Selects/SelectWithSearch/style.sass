@@ -1,0 +1,90 @@
+.select-with-search-wrapper
+  display: flex
+  position: relative
+  align-items: stretch
+  flex-direction: column
+
+  .select-with-search-label
+    font-size: 14px
+    font-weight: 500
+    color: #53504A
+    font-family: rubik
+    margin-bottom: 5px
+
+  .select-with-search-value-wrapper
+    border: 0
+    display: flex
+    padding: 10px 16px
+    cursor: pointer
+    flex-direction: row
+    align-items: center
+    background: #e4d4f4
+    border-radius: 1000px 1000px 1000px 1000px
+
+    &.opened
+      border-radius: 20px 20px 0px 0px
+
+    .select-with-search-value
+      flex: 1
+      font-size: 14px
+      font-weight: 500
+      color: #8E8E83
+      min-height: 17px
+      font-family: rubik
+
+    .select-with-search-value-arrow
+      width: 0
+      height: 0
+      border-style: solid
+      border-width: 5px 4px 0 4px
+      border-color: #888 transparent transparent transparent
+
+  .select-with-search-list-wrapper
+    gap: 10px
+    z-index: 10
+    display: flex
+    max-height: 210px
+    background: #e4d4f4
+    flex-direction: column
+    padding: 0 20px 20px 20px
+    border-radius: 0 0 5px 5px
+
+    .select-with-search-list-search-input
+      width: 100%
+      border: none
+      outline: none
+      font-size: 14px
+      font-weight: 500
+      color: #8E8E83
+      padding: 8px 16px
+      font-family: rubik
+      background: #f2eafa
+      border-radius: 1000px
+      box-sizing: border-box
+      border: 1px solid #d9d9c5
+
+    .select-with-search-list
+      display: flex
+      max-height: 100%
+      overflow-y: auto
+      align-items: stretch
+      flex-direction: column
+
+      .select-with-search-list-item
+        padding: 6px
+        cursor: pointer
+        font-size: 14px
+        font-weight: 500
+        color: #53504A
+        font-family: rubik
+
+        &.picked
+          border-radius: 5px
+          background-color: #E05F38
+
+      .select-with-search-list-items-not-found
+        padding: 6px
+        font-size: 14px
+        font-weight: 500
+        color: #53504A
+        font-family: rubik

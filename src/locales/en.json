@@ -1,7 +1,78 @@
 {
 	"elements-menu": {
-		"add-element": "Add element",
-		"add-image": "Image",
-		"add-text": "Text"
+		"open-add-element-popup": "Добавить элемент",
+		"close-add-element-popup": "Закрыть",
+		"delete-element": "Удалить элемент",
+
+		"element-types": {
+			"image": "Фото",
+			"text": "Текст",
+			"figure": "Фигура",
+			"background": "Фон",
+			"canvas": "Холст"
+		},
+
+		"text-element": {
+			"content-label": "Текст",
+			"x-label": "Позиция X",
+			"y-label": "Позиция Y",
+			"width-label": "Ширина",
+			"line-height-label": "Высота",
+			"font-size-label": "Размер",
+			"rotate-label": "Поворот",
+			"font-family-label": "Шрифт",
+			"font-family-placeholder": "Выберите шрифт",
+			"align-label": "Выравнивание",
+			"align-options": {
+				"left": "Слева",
+				"center": "По центру",
+				"right": "Справа"
+			},
+			"justify-label": "Растягивать",
+			"option-yes": "Да",
+			"option-no": "Нет"
+		},
+
+		"image-element": {
+			"x-label": "Позиция X",
+			"y-label": "Позиция Y",
+			"width-label": "Ширина",
+			"height-label": "Высота",
+			"rotate-label": "Поворот"
+		},
+
+		"figure-element": {
+			"type-label": "Тип",
+			"type-options": {
+				"circle": "Круг",
+				"rectangle": "Прямоугольник"
+			},
+			"x-label": "Позиция X",
+			"y-label": "Позиция Y",
+			"width-label": "Ширина",
+			"height-label": "Высота",
+			"rotate-label": "Поворот"
+		},
+
+		"background-element": {
+			"color-label": "Цвет фона"
+		},
+
+		"canvas-element": {
+			"brush-width-label": "Размер кисти",
+			"brush-color-label": "Цвет кисти"
+		},
+
+		"alerts": {
+			"hold-for-delete": "Удерживайте, чтобы удалить"
+		}
+	},
+
+	"select-with-search": {
+		"search": "Поиск...",
+		"no-options-found": "Варианты не найдены"
+	},
+	"default-select": {
+		"no-options-found": "Варианты не найдены"
 	}
 }

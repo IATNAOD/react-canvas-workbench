@@ -1,0 +1,178 @@
+.elements-menu
+  flex: 1
+  gap: 20px
+  width: 100%
+  height: 100%
+  display: flex
+  align-items: stretch
+  background: #E4D4F4
+  flex-direction: column
+
+  .elements-menu-header
+    gap: 10px
+    display: flex
+    position: relative
+    flex-direction: row
+    padding: 10px 10px 0px 10px
+
+    .elements-menu-types
+      gap: 10px
+      z-index: 10
+      display: flex
+      position: absolute
+      padding-bottom: 10px
+      align-items: stretch
+      background: #e4d4f4
+      flex-direction: column
+      width: calc(100% - 20px)
+
+      &.hidden
+        display: none
+
+  .elements-menu-content-wrapper
+    flex: 1 0 0
+    overflow: hidden
+
+    .elements-menu-content
+      gap: 10px
+      height: 100%
+      display: flex
+      overflow-y: overlay
+      flex-direction: column
+      padding: 0 10px 0 10px
+      width: calc(100% - 20px)
+
+      &::-webkit-scrollbar
+        width: 10px
+        height: 10px
+        border-radius: 10px
+        background: #f2eafa
+
+      &::-webkit-scrollbar-thumb
+        border-radius: 10px
+        background: #b9b9a8
+
+      &::-webkit-scrollbar-button
+        width: 0px
+        height: 0px
+
+      &::-webkit-scrollbar-corner
+        width: 0px
+        height: 0px
+
+      .elements-menu-list
+        display: flex
+        flex-direction: column
+
+        .elements-menu-list-item
+          gap: 5px
+          display: flex
+          cursor: pointer
+          max-height: 36px
+          padding: 5px 10px
+          border-radius: 12px
+          background: #F2EAFA
+          flex-direction: column
+          border: 2px solid #F2EAFA
+
+          &.picked
+            max-height: max-content
+            border: 2px solid #7828C8
+
+            .elements-menu-list-item-body
+              display: flex
+
+          .elements-menu-list-item-header
+            gap: 5px
+            display: flex
+            flex-direction: row
+            align-items: center
+
+            .elements-menu-list-item-image-wrapper
+              width: 30px
+              height: 30px
+              overflow: hidden
+              border-radius: 4px
+              position: relative
+
+              &:before
+                content: ""
+                display: block
+                padding-top: 100%
+
+              .elements-menu-list-item-image
+                top: 0px
+                left: 0px
+                width: 100%
+                height: 100%
+                position: absolute
+                object-fit: contain
+
+            .elements-menu-list-item-canvas-wrapper
+              width: 30px
+              height: 30px
+              position: relative
+
+            .elements-menu-list-item-background-wrapper
+              width: 30px
+              height: 30px
+              overflow: hidden
+              border-radius: 4px
+              position: relative
+
+              .elements-menu-list-item-background
+                width: 100%
+                height: 100%
+
+            .elements-menu-list-item-figure-wrapper
+              width: 30px
+              height: 30px
+              overflow: hidden
+              position: relative
+
+              .elements-menu-list-item-figure
+                width: 100%
+                height: 100%
+
+                &.circle
+                  border-radius: 1000px
+
+                &.rectangle
+                  border-radius: 2px
+
+            .elements-menu-list-item-name
+              flex: 1
+              font-size: 12px
+              overflow: hidden
+              color: #53504A
+              font-weight: 600
+              display: -webkit-box
+              word-break: break-all
+              -webkit-line-clamp: 2
+              text-overflow: ellipsis
+              -webkit-box-orient: vertical
+
+            .elements-menu-list-item-icon
+              display: flex
+              flex-direction: row
+              align-items: center
+              justify-content: center
+
+              svg
+                cursor: pointer
+                transition: all 0.5s
+
+                &:hover
+                  transform: scale(1.1)
+
+          .elements-menu-list-item-body
+            display: none
+            align-items: stretch
+            flex-direction: column
+            justify-content: stretch
+
+            .elements-menu-list-item-delete-alert
+              font-size: 14px
+              color: #F31260
+              font-weight: 600
+              text-align: center

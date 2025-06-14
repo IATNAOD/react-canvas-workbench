@@ -1,58 +1,65 @@
 {
 	"elements-menu": {
-		"add-element": "Добавить элемент",
-		"add-image": "Фото",
-		"add-text": "Текст"
-	},
+		"open-add-element-popup": "Добавить элемент",
+		"close-add-element-popup": "Закрыть",
+		"delete-element": "Удалить элемент",
 
-	"confirm-action-modal": {
-		"title": "Подтверждение действия",
-		"copy-provider-text": "Вы уверены, что хотите сделать копию поставщика '{{name}}'?",
-		"delete-provider-text": "Вы уверены, что хотите удалить поставщика '{{name}}'?",
-		"copy-preset-text": "Вы уверены, что хотите сделать копию пресета '{{name}}'?",
-		"delete-preset-text": "Вы уверены, что хотите удалить пресет '{{name}}'?",
-		"copy-layout-text": "Вы уверены, что хотите сделать копию макета '{{name}}'?",
-		"delete-layout-text": "Вы уверены, что хотите удалить макет '{{name}}'?",
-		"copy-template-text": "Вы уверены, что хотите сделать копию макета '{{name}}'?",
-		"delete-template-text": "Вы уверены, что хотите удалить макет '{{name}}'?",
-		"confirm": "Подтвердить",
-		"reject": "Отклонить"
-	},
+		"element-types": {
+			"image": "Фото",
+			"text": "Текст",
+			"figure": "Фигура",
+			"background": "Фон"
+		},
 
-	"manage-fonts-modal": {
-		"title": "Управление шрифтами",
-		"pick-photo-from-pc": "Выберите шрифты с компьютера",
-		"or": "или",
-		"drag-and-drop": "перетащите их в эту область",
-		"drop-for-upload": "Отпустите, чтобы добавить выбранные шрифты",
-		"pick-fonts": "Выбрать шрифты",
-		"upload-picked-photo": "Загрузить выбранные шрифты",
-		"alerts": {
-			"confirm-delete-fonts": "Вы уверены, что хотите удалить выбранные шрифты?"
+		"text-element": {
+			"content-label": "Текст",
+			"x-label": "Позиция X",
+			"y-label": "Позиция Y",
+			"width-label": "Ширина",
+			"line-height-label": "Высота",
+			"font-size-label": "Размер",
+			"rotate-label": "Поворот",
+			"font-family-label": "Шрифт",
+			"font-family-placeholder": "Выберите шрифт",
+			"align-label": "Выравнивание",
+			"align-options": {
+				"left": "Слева",
+				"center": "По центру",
+				"right": "Справа"
+			},
+			"justify-label": "Растягивать",
+			"option-yes": "Да",
+			"option-no": "Нет"
 		},
-		"errors": {
-			"size-too-big": "Размер шрифта больше 10Мб"
-		}
-	},
-	"upload-photos-modal": {
-		"title": "Загрузка изображений",
-		"pick-photo-from-pc": "Выберите фото с компьютера",
-		"or": "или",
-		"drag-and-drop": "перетащите их в эту область",
-		"drop-for-upload": "Отпустите, чтобы добавить выбранные фото",
-		"pick-photo": "Выбрать фото",
-		"upload-picked-photo": "Загрузить выбранные фото",
-		"alerts": {
-			"confirm-delete-assets": "Вы уверены, что хотите удалить все изображения?"
+
+		"image-element": {
+			"x-label": "Позиция X",
+			"y-label": "Позиция Y",
+			"width-label": "Ширина",
+			"height-label": "Высота",
+			"rotate-label": "Поворот"
 		},
-		"errors": {
-			"size-too-big": "Размер изображения больше 10Мб"
+
+		"figure-element": {
+			"type-label": "Тип",
+			"type-options": {
+				"circle": "Круг",
+				"rectangle": "Прямоугольник"
+			},
+			"x-label": "Позиция X",
+			"y-label": "Позиция Y",
+			"width-label": "Ширина",
+			"height-label": "Высота",
+			"rotate-label": "Поворот"
+		},
+
+		"background-element": {
+			"color-label": "Цвет фона"
+		},
+
+		"alerts": {
+			"hold-for-delete": "Удерживайте, чтобы удалить"
 		}
-	},
-	"create-mask-modal": {
-		"title": "Создание маски",
-		"brush-width-palcholder": "Введите размер кисти",
-		"save": "Сохранить маску"
 	},
 
 	"select-with-search": {
@@ -61,8 +68,5 @@
 	},
 	"default-select": {
 		"no-options-found": "Варианты не найдены"
-	},
-	"color-picker": {
-		"hex-copied": "Hex скопирован"
 	}
 }
