@@ -68,12 +68,13 @@ export default handleActions(
 
 		[saveStateToHistoryAsync.success]: (s, a) => ({
 			...s,
-			...(JSON.stringify(s.content.elements) != JSON.stringify(s.history.list[s.history.index])
+			...(JSON.stringify(s.content.elements.map((v) => ({ ...v, image: v.image?.currentSrc }))) !=
+			JSON.stringify((s.history.list[s.history.index] || []).map((v) => ({ ...v, image: v.image?.currentSrc })))
 				? {
 						history: {
 							...s.history,
 							index: 0,
-							canRedo: s.history.index > 0,
+							canRedo: false,
 							canUndo: s.history.index < s.history.list.length,
 							list: [s.content.elements, ...s.history.list.slice(s.history.index, s.history.list.length)],
 						},

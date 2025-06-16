@@ -10,7 +10,7 @@ export default () => {
 		dispatch(
 			changeEditorContentField({
 				name: 'elements',
-				value: typeof updater == 'function' ? ({ elements }) => updater(elements) : updater,
+				value: typeof updater == 'function' ? ({ elements }) => updater(elements) : [...updater],
 			})
 		);
 	};

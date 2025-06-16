@@ -140,10 +140,12 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 		if (DragStateRef.current.isDrawing && SelectedElementIndexRef.current != null) {
 			const element = ElementsRef.current[SelectedElementIndexRef.current];
 
-			ElementsRef.current[SelectedElementIndexRef.current].paths[element.paths.length - 1].positions.push({
-				x: mouseX,
-				y: mouseY,
-			});
+			ElementsRef.current[SelectedElementIndexRef.current] = {
+				...element,
+				paths: element.paths.map((p, i) =>
+					i == element.paths.length - 1 ? { ...p, positions: [...p.positions, { x: mouseX, y: mouseY }] } : p
+				),
+			};
 
 			if (ElementsRef.current && ContentCanvasRef.current && ContentCanvasCtxRef.current) {
 				drawContent({
@@ -184,7 +186,7 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 				DragStateRef.current.isShift || e.shiftKey ? 45 : 1
 			);
 
-			ElementsRef.current[SelectedElementIndexRef.current].rotate = newRotate;
+			ElementsRef.current[SelectedElementIndexRef.current] = { ...element, rotate: newRotate };
 
 			if (ElementsRef.current && ContentCanvasRef.current && ContentCanvasCtxRef.current) {
 				drawContent({
@@ -610,6 +612,8 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 			selectedElement && element.id == selectedElement.id ? selectedElement : element
 		);
 
+		let shouldUpdate = false;
+
 		if (
 			HoveredElementIndexRef.current != null &&
 			(SelectedElementIndexRef.current == null ||
@@ -618,14 +622,7 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 		) {
 			SelectedElementIndexRef.current = HoveredElementIndexRef.current;
 
-			dispatch(
-				changeEditorContentFields({
-					updater: {
-						selectedElement: ElementsRef.current[SelectedElementIndexRef.current],
-						selectedElementId: ElementsRef.current[SelectedElementIndexRef.current].id,
-					},
-				})
-			);
+			shouldUpdate = true;
 		}
 
 		if (SelectedElementIndexRef.current == null) return;
@@ -640,11 +637,17 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 				isDrawing: true,
 			};
 
-			ElementsRef.current[SelectedElementIndexRef.current].paths.push({
-				color: element.color,
-				brushWidth: element.brushWidth,
-				positions: [{ x: mouseX, y: mouseY }],
-			});
+			ElementsRef.current[SelectedElementIndexRef.current] = {
+				...ElementsRef.current[SelectedElementIndexRef.current],
+				paths: [
+					...(element.paths || []),
+					{
+						color: element.color,
+						brushWidth: element.brushWidth,
+						positions: [{ x: mouseX, y: mouseY }],
+					},
+				],
+			};
 		} else {
 			const handles = getHandles({
 				x: element.x,
@@ -702,6 +705,17 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 			}
 		}
 
+		if (shouldUpdate) {
+			dispatch(
+				changeEditorContentFields({
+					updater: {
+						selectedElement: ElementsRef.current[SelectedElementIndexRef.current],
+						selectedElementId: ElementsRef.current[SelectedElementIndexRef.current].id,
+					},
+				})
+			);
+		}
+
 		if (ElementsRef.current && ToolsCanvasRef.current && ToolsCanvasCtxRef.current) {
 			drawTools({
 				mouseX,
@@ -753,10 +767,6 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 		}
 
 		if (DragStateRef.current.isDrawing) {
-			ElementsRef.current[SelectedElementIndexRef.current].paths = ElementsRef.current[
-				SelectedElementIndexRef.current
-			].paths.filter((p) => p.positions.length);
-
 			drawContent({
 				width: canvasWidth,
 				height: canvasHeight,
@@ -822,10 +832,6 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 		}
 
 		if (DragStateRef.current.isDrawing) {
-			ElementsRef.current[SelectedElementIndexRef.current].paths = ElementsRef.current[
-				SelectedElementIndexRef.current
-			].paths.filter((p) => p.positions.length);
-
 			drawContent({
 				width: canvasWidth,
 				height: canvasHeight,
@@ -956,7 +962,11 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 			);
 		}
 
-		if (JSON.stringify(elements) != JSON.stringify(history[historyIndex])) dispatch(saveStateToHistory({}));
+		if (
+			JSON.stringify(elements.map((v) => ({ ...v, image: v.image?.currentSrc }))) !=
+			JSON.stringify((history[historyIndex] || []).map((v) => ({ ...v, image: v.image?.currentSrc })))
+		)
+			dispatch(saveStateToHistory({}));
 	}, [elements, settings]);
 
 	React.useEffect(() => {

@@ -157,6 +157,7 @@ export default ({} = {}) => {
 								visible: true,
 								brushWidth: 20,
 								type: 'canvas',
+								color: '#000000',
 							},
 						],
 					})
