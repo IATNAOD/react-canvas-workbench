@@ -14,15 +14,19 @@ export const store = configureStore({
 	preloadedState: {},
 	middleware: () => [
 		sagaMiddleware,
-		createLogger({
-			collapsed: true,
-			duration: true,
-			colors: {
-				title: (action) => loggerActionColors[action.type.split('.')[1]],
-			},
-		}),
+		...(process.env.NODE_ENV != 'release'
+			? [
+					createLogger({
+						collapsed: true,
+						duration: true,
+						colors: {
+							title: (action) => loggerActionColors[action.type.split('.')[1]],
+						},
+					}),
+				]
+			: []),
 	],
-	devTools: process.env.NODE_ENV !== 'production',
+	devTools: process.env.NODE_ENV != 'release',
 });
 
 sagaMiddleware.run(sagas);
