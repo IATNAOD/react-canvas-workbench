@@ -9,7 +9,15 @@ import { redoHistory, undoHistory } from '../../store/actions/editor';
 import UndoIcon from '../Icons/UndoIcon';
 import RedoIcon from '../Icons/RedoIcon';
 
-export default ({}) => {
+export default ({
+	customization = {
+		undoActiveColor: '',
+		redoActiveColor: '',
+		undoInactiveColor: '',
+		redoInactiveColor: '',
+	},
+}) => {
+	const customizationSettings = useReduxState((s) => s.customizationManager.editorControls);
 	const canUndo = useReduxState((s) => s.editorManager.history.canUndo);
 	const canRedo = useReduxState((s) => s.editorManager.history.canRedo);
 	const dispatch = useReduxDispatch();
@@ -21,13 +29,25 @@ export default ({}) => {
 					onClick={() => (canUndo ? dispatch(undoHistory()) : null)}
 					className={classNames({ 'editor-controls-history-button': true, disabled: !canUndo })}
 				>
-					<UndoIcon fill={canUndo ? '#7828c8' : '#71717A'} />
+					<UndoIcon
+						fill={
+							canUndo
+								? customization.undoActiveColor || customizationSettings.undoActiveColor
+								: customization.undoInactiveColor || customizationSettings.undoInactiveColor
+						}
+					/>
 				</div>
 				<div
 					onClick={() => (canRedo ? dispatch(redoHistory()) : null)}
 					className={classNames({ 'editor-controls-history-button': true, disabled: !canRedo })}
 				>
-					<RedoIcon fill={canRedo ? '#7828c8' : '#71717A'} />
+					<RedoIcon
+						fill={
+							canRedo
+								? customization.redoActiveColor || customizationSettings.redoActiveColor
+								: customization.redoInactiveColor || customizationSettings.redoInactiveColor
+						}
+					/>
 				</div>
 			</div>
 		</div>

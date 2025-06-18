@@ -8,9 +8,11 @@ export default ({
 	elements,
 	settings,
 	getHandles,
+	customization,
 	snappedPosition,
 	hoveredElementIndex,
 	selectedElementIndex,
+	customizationSettings,
 }) => {
 	// set default settings
 	if (!settings) settings = { showMiddleLines: true, rotateHandleSize: 16, handleSize: 8, snap: 10 };
@@ -37,8 +39,8 @@ export default ({
 	}
 
 	if (selectedElement && selectedElement.type == 'canvas') {
-		ctx.strokeStyle = '#7828c8';
-		ctx.lineWidth = 2;
+		ctx.strokeStyle = customization.brushBorderColor || customizationSettings.brushBorderColor;
+		ctx.lineWidth = customization.brushBorderWidth || customizationSettings.brushBorderWidth;
 
 		ctx.beginPath();
 		ctx.arc(mouseX, mouseY, selectedElement.brushWidth / 2, 0, Math.PI * 2);
@@ -63,8 +65,8 @@ export default ({
 				y = 0;
 			}
 
-			ctx.strokeStyle = '#7828c8';
-			ctx.lineWidth = 3;
+			ctx.strokeStyle = customization.selectedElementBorderColor || customizationSettings.selectedElementBorderColor;
+			ctx.lineWidth = customization.selectedElementBorderWidth || customizationSettings.selectedElementBorderWidth;
 
 			ctx.setLineDash([]);
 			ctx.strokeRect(x, y, selectedElement.width / scale, selectedElement.height / scale);
@@ -95,10 +97,9 @@ export default ({
 				}
 
 				if (name == 'rotate') {
-					ctx.fillStyle = '#F5A524';
-					ctx.strokeStyle = 'black';
-
-					ctx.lineWidth = 1;
+					ctx.lineWidth = customization.rotateHandleBorderWidth || customizationSettings.rotateHandleBorderWidth;
+					ctx.strokeStyle = customization.rotateHandleBorderColor || customizationSettings.rotateHandleBorderColor;
+					ctx.fillStyle = customization.rotateHandleBackgroundColor || customizationSettings.rotateHandleBackgroundColor;
 
 					const circle = new Path2D();
 
@@ -108,10 +109,9 @@ export default ({
 					ctx.stroke(circle);
 					ctx.fill(circle);
 				} else {
-					ctx.fillStyle = '#17C964';
-					ctx.strokeStyle = 'black';
-
-					ctx.lineWidth = 1;
+					ctx.lineWidth = customization.resizeHandleBorderWidth || customizationSettings.resizeHandleBorderWidth;
+					ctx.strokeStyle = customization.resizeHandleBorderColor || customizationSettings.resizeHandleBorderColor;
+					ctx.fillStyle = customization.resizeHandleBackgroundColor || customizationSettings.resizeHandleBackgroundColor;
 
 					ctx.fillRect(x - settings.handleSize / 2, y - settings.handleSize / 2, settings.handleSize, settings.handleSize);
 					ctx.strokeRect(x - settings.handleSize / 2, y - settings.handleSize / 2, settings.handleSize, settings.handleSize);
@@ -140,8 +140,8 @@ export default ({
 				y = 0;
 			}
 
-			ctx.strokeStyle = '#7828c8';
-			ctx.lineWidth = 2;
+			ctx.lineWidth = customization.hoveredElementBorderWidth || customizationSettings.hoveredElementBorderWidth;
+			ctx.strokeStyle = customization.hoveredElementBorderColor || customizationSettings.hoveredElementBorderColor;
 
 			ctx.setLineDash([8, 8]);
 			ctx.strokeRect(x, y, hoveredElement.width / scale, hoveredElement.height / scale);
@@ -153,9 +153,9 @@ export default ({
 	if (selectedElement && snappedPosition) {
 		ctx.save();
 
-		ctx.strokeStyle = '#3c5eec';
 		ctx.setLineDash([0, 0]);
-		ctx.lineWidth = 2;
+		ctx.lineWidth = customization.snapLineWidth || customizationSettings.snapLineWidth;
+		ctx.strokeStyle = customization.snapLineColor || customizationSettings.snapLineColor;
 
 		for (const line of snappedPosition.snapLines) {
 			if (line.center) {
@@ -184,9 +184,9 @@ export default ({
 	if (settings.showMiddleLines) {
 		ctx.save();
 
-		ctx.strokeStyle = '#3c5eec';
 		ctx.setLineDash([2, 2]);
-		ctx.lineWidth = 2;
+		ctx.lineWidth = customization.middleLinesColor || customizationSettings.middleLinesColor;
+		ctx.strokeStyle = customization.middleLinesWidth || customizationSettings.middleLinesWidth;
 
 		ctx.beginPath();
 		ctx.moveTo(width / 2 / scale - 1, 0);

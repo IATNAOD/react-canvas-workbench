@@ -17,8 +17,40 @@ import TextElement from '../TextElement';
 
 import { changeEditorContentField, selectElement } from '../../../store/actions/editor';
 
-export default ({} = {}) => {
+export default ({
+	customization = {
+		backgroundColor: '',
+		selectLabelColor: '',
+		selectValueColor: '',
+		listItemNameColor: '',
+		settingsLabelColor: '',
+		settingsInputColor: '',
+		imageUploadIconColor: '',
+		typesBackgroundColor: '',
+		selectBackgroundColor: '',
+		imageUploadBorderColor: '',
+		listItemBackgroundColor: '',
+		listItemDeleteAlertColor: '',
+		typeButtonBackgroundColor: '',
+		listItemControlsIconColor: '',
+		selectWithSearchBackground: '',
+		selectWithSearchValueColor: '',
+		selectWithSearchLabelColor: '',
+		imageUploadBackgroundColor: '',
+		listItemSelectedBorderColor: '',
+		settingsInputBackgroundColor: '',
+		openTypesButtonBackgroundColor: '',
+		closeTypesButtonBackgroundColor: '',
+		selectPickedValueBackgroundColor: '',
+		listItemDeleteButtonBackgroundColor: '',
+		selectWithSearchSearchInputBorderColor: '',
+		selectWithSearchPickedValueBackgroundColor: '',
+		selectWithSearchSearchInputBackgroundColor: '',
+		colorPicker: { rgbaTextColor: '', inputTextColor: '', backgroundColor: '', inputBackgroundColor: '' },
+	},
+}) => {
 	const selectedElementId = useReduxState((s) => s.editorManager.content.selectedElementId);
+	const customizationSettings = useReduxState((s) => s.customizationManager.elementsMenu);
 	const [AddElementMenuOpened, SetAddElementMenuOpened] = React.useState(false);
 	const canvasHeight = useReduxState((s) => s.editorManager.content.height);
 	const elements = useReduxState((s) => s.editorManager.content.elements);
@@ -41,7 +73,7 @@ export default ({} = {}) => {
 				dispatch(
 					changeEditorContentField({
 						name: 'elements',
-						value: [
+						updater: [
 							...elements,
 							{
 								x: 0,
@@ -75,7 +107,7 @@ export default ({} = {}) => {
 				dispatch(
 					changeEditorContentField({
 						name: 'elements',
-						value: [
+						updater: [
 							...elements,
 							{
 								x: 0,
@@ -99,7 +131,7 @@ export default ({} = {}) => {
 				dispatch(
 					changeEditorContentField({
 						name: 'elements',
-						value: [
+						updater: [
 							...elements,
 							{
 								x: 0,
@@ -124,7 +156,7 @@ export default ({} = {}) => {
 				dispatch(
 					changeEditorContentField({
 						name: 'elements',
-						value: [
+						updater: [
 							{
 								id: uuid4(),
 								locked: false,
@@ -143,7 +175,7 @@ export default ({} = {}) => {
 				dispatch(
 					changeEditorContentField({
 						name: 'elements',
-						value: [
+						updater: [
 							...elements,
 							{
 								x: 0,
@@ -171,7 +203,7 @@ export default ({} = {}) => {
 	};
 
 	const updateElementsOrder = (newElements) => {
-		dispatch(changeEditorContentField({ name: 'elements', value: newElements }));
+		dispatch(changeEditorContentField({ name: 'elements', updater: newElements }));
 	};
 
 	const selectElementWrapper = (element) => {
@@ -182,7 +214,7 @@ export default ({} = {}) => {
 		const elementIndex = elements.findIndex((e) => e.id == element.id);
 
 		dispatch(
-			changeEditorContentField({ name: 'elements', value: elements.toSpliced(elementIndex, 0, { ...element, id: uuid4() }) })
+			changeEditorContentField({ name: 'elements', updater: elements.toSpliced(elementIndex, 0, { ...element, id: uuid4() }) })
 		);
 	};
 
@@ -190,7 +222,7 @@ export default ({} = {}) => {
 		dispatch(
 			changeEditorContentField({
 				name: 'elements',
-				value: elements.map((v) => (v.id == elementId ? { ...v, locked: !v.locked } : v)),
+				updater: elements.map((v) => (v.id == elementId ? { ...v, locked: !v.locked } : v)),
 			})
 		);
 	};
@@ -199,72 +231,80 @@ export default ({} = {}) => {
 		dispatch(
 			changeEditorContentField({
 				name: 'elements',
-				value: elements.map((v) => (v.id == elementId ? { ...v, visible: !v.visible } : v)),
+				updater: elements.map((v) => (v.id == elementId ? { ...v, visible: !v.visible } : v)),
 			})
 		);
 	};
 
 	const deleteElement = (elementId) => {
-		dispatch(changeEditorContentField({ name: 'elements', value: elements.filter((v) => v.id != elementId) }));
+		dispatch(changeEditorContentField({ name: 'elements', updater: elements.filter((v) => v.id != elementId) }));
 	};
 
 	return (
-		<div className={classNames({ 'elements-menu': true })}>
+		<div
+			className={classNames({ 'elements-menu': true })}
+			style={{ backgroundColor: customization.backgroundColor || customizationSettings.backgroundColor }}
+		>
 			<div className={classNames({ 'elements-menu-header': true })}>
-				<div className={classNames({ 'elements-menu-types': true, hidden: !AddElementMenuOpened })}>
+				<div
+					className={classNames({ 'elements-menu-types': true, hidden: !AddElementMenuOpened })}
+					style={{ backgroundColor: customization.typesBackgroundColor || customizationSettings.typesBackgroundColor }}
+				>
 					<DefaultButton
 						flex={1}
 						gap={'10px'}
 						height={'36px'}
 						text={t('elements-menu.close-add-element-popup')}
 						onClick={() => SetAddElementMenuOpened(false)}
+						background={customization.closeTypesButtonBackgroundColor || customizationSettings.closeTypesButtonBackgroundColor}
 					/>
 					<DefaultButton
 						flex={1}
 						gap={'10px'}
-						type={'info'}
 						height={'36px'}
 						text={t('elements-menu.element-types.text')}
 						onClick={() => addElement({ type: 'text' })}
+						background={customization.typeButtonBackgroundColor || customizationSettings.typeButtonBackgroundColor}
 					/>
 					<DefaultButton
 						flex={1}
 						gap={'10px'}
-						type={'info'}
 						height={'36px'}
 						text={t('elements-menu.element-types.image')}
 						onClick={() => addElement({ type: 'image' })}
+						background={customization.typeButtonBackgroundColor || customizationSettings.typeButtonBackgroundColor}
 					/>
 					<DefaultButton
 						flex={1}
 						gap={'10px'}
-						type={'info'}
 						height={'36px'}
 						text={t('elements-menu.element-types.figure')}
 						onClick={() => addElement({ type: 'figure' })}
+						background={customization.typeButtonBackgroundColor || customizationSettings.typeButtonBackgroundColor}
 					/>
 					<DefaultButton
 						flex={1}
 						gap={'10px'}
-						type={'info'}
 						height={'36px'}
 						text={t('elements-menu.element-types.background')}
 						onClick={() => addElement({ type: 'background' })}
+						background={customization.typeButtonBackgroundColor || customizationSettings.typeButtonBackgroundColor}
 					/>
 					<DefaultButton
 						flex={1}
 						gap={'10px'}
-						type={'info'}
 						height={'36px'}
 						text={t('elements-menu.element-types.canvas')}
 						onClick={() => addElement({ type: 'canvas' })}
+						background={customization.typeButtonBackgroundColor || customizationSettings.typeButtonBackgroundColor}
 					/>
 				</div>
 				<DefaultButton
 					gap={'10px'}
 					height={'36px'}
-					text={t('elements-menu.open-add-element-popup')}
 					onClick={() => SetAddElementMenuOpened(true)}
+					text={t('elements-menu.open-add-element-popup')}
+					background={customization.openTypesButtonBackgroundColor || customizationSettings.openTypesButtonBackgroundColor}
 				/>
 			</div>
 			<div className={classNames({ 'elements-menu-content-wrapper': true })}>
@@ -280,10 +320,19 @@ export default ({} = {}) => {
 									<div
 										{...(selectedElementId != element.id && !element.locked ? dragHandleProps : {})}
 										className={classNames({ 'elements-menu-list-item': true, picked: selectedElementId == element.id })}
+										style={{
+											backgroundColor: customization.listItemBackgroundColor || customizationSettings.listItemBackgroundColor,
+											borderColor:
+												selectedElementId == element.id
+													? customization.listItemSelectedBorderColor || customizationSettings.listItemSelectedBorderColor
+													: customization.listItemBackgroundColor || customizationSettings.listItemBackgroundColor,
+										}}
 									>
 										{element.type == 'text' ? (
 											<TextElement
 												element={element}
+												customization={customization}
+												customizationSettings={customizationSettings}
 												deleteElement={deleteElement}
 												duplicateElement={duplicateElement}
 												selectElement={selectElementWrapper}
@@ -293,6 +342,8 @@ export default ({} = {}) => {
 										) : element.type == 'image' ? (
 											<ImageElement
 												element={element}
+												customization={customization}
+												customizationSettings={customizationSettings}
 												deleteElement={deleteElement}
 												duplicateElement={duplicateElement}
 												selectElement={selectElementWrapper}
@@ -302,6 +353,8 @@ export default ({} = {}) => {
 										) : element.type == 'figure' ? (
 											<FigureElement
 												element={element}
+												customization={customization}
+												customizationSettings={customizationSettings}
 												deleteElement={deleteElement}
 												duplicateElement={duplicateElement}
 												selectElement={selectElementWrapper}
@@ -311,6 +364,8 @@ export default ({} = {}) => {
 										) : element.type == 'background' ? (
 											<BackgroundElement
 												element={element}
+												customization={customization}
+												customizationSettings={customizationSettings}
 												deleteElement={deleteElement}
 												duplicateElement={duplicateElement}
 												selectElement={selectElementWrapper}
@@ -320,6 +375,8 @@ export default ({} = {}) => {
 										) : element.type == 'canvas' ? (
 											<CanvasElement
 												element={element}
+												customization={customization}
+												customizationSettings={customizationSettings}
 												deleteElement={deleteElement}
 												duplicateElement={duplicateElement}
 												selectElement={selectElementWrapper}

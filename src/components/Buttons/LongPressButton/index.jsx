@@ -27,6 +27,7 @@ export default ({
 	textPaddingRight = 0,
 	onLongPress = () => {},
 	pickedBorderColor = '',
+	background = '#7828C8',
 }) => {
 	const { progress: longPressProgress, handlers: longPressHandlers } = useLongPress(onLongPress, onStart, onClick, { delay });
 
@@ -34,6 +35,7 @@ export default ({
 		<div
 			{...(!disabled ? longPressHandlers : {})}
 			style={{
+				backgroundColor: background,
 				...(gap ? { gap } : {}),
 				...(flex ? { flex } : { minWidth: `calc(${width} - 24px)` }),
 				maxHeight: `calc(${height}px - 20px - ${type.includes('transparent') ? 4 : 0}px)`,

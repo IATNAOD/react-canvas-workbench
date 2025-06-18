@@ -21,12 +21,14 @@ export default ({
 	onClick = () => {},
 	textPaddingLeft = 0,
 	textPaddingRight = 0,
+	background = '#7828C8',
 	pickedBorderColor = '',
 }) => {
 	return (
 		<div
 			onClick={() => (disabled ? null : onClick())}
 			style={{
+				backgroundColor: background,
 				...(gap ? { gap } : {}),
 				...(flex ? { flex } : { minWidth: `calc(${width} - 24px)` }),
 				maxHeight: `calc(${height}px - 20px - ${type.includes('transparent') ? 4 : 0}px)`,

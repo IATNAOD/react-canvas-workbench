@@ -12,7 +12,10 @@ export default ({
 	placeholder = '',
 	onChange = () => {},
 	wrapperWidth = '100%',
+	labelColor = '#53504A',
 	background = '#e4d4f4',
+	valueColor = '#53504A',
+	pickedValueBackgroundColor = '#E05F38',
 }) => {
 	const [IsOpen, SetIsOpen] = React.useState(false);
 	const { t } = useTranslation();
@@ -28,13 +31,25 @@ export default ({
 			style={{ width: wrapperWidth }}
 			className={classNames({ 'default-select-wrapper': true, error })}
 		>
-			{label && <div className={classNames({ 'default-select-label': true })}>{label}</div>}{' '}
+			{label && (
+				<div
+					style={{ color: labelColor }}
+					className={classNames({ 'default-select-label': true })}
+				>
+					{label}
+				</div>
+			)}{' '}
 			<div
 				onClick={() => SetIsOpen((prev) => !prev)}
 				style={{ background, borderColor: background }}
 				className={classNames({ 'default-select-value-wrapper': true, opened: IsOpen })}
 			>
-				<span className={classNames({ 'default-select-value': true })}>{selected ? selected.name : placeholder}</span>
+				<span
+					style={{ color: valueColor }}
+					className={classNames({ 'default-select-value': true })}
+				>
+					{selected ? selected.name : placeholder}
+				</span>
 				<span className={classNames({ 'default-select-value-arrow': true })} />
 			</div>
 			{IsOpen && (
@@ -49,12 +64,19 @@ export default ({
 									key={index}
 									onClick={() => handleSelect(option)}
 									className={classNames({ 'default-select-list-item': true, picked: option.value == selected?.value })}
+									style={{
+										color: valueColor,
+										...(option.value == selected?.value ? { backgroundColor: pickedValueBackgroundColor } : {}),
+									}}
 								>
 									{option.name}
 								</div>
 							))
 						) : (
-							<div className={classNames({ 'default-select-list-items-not-found': true })}>
+							<div
+								style={{ color: valueColor }}
+								className={classNames({ 'default-select-list-items-not-found': true })}
+							>
 								{t('default-select.no-options-found')}
 							</div>
 						)}

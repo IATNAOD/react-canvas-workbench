@@ -21,8 +21,8 @@ import {
 	changeEditorSettingsFieldsAsync,
 } from '../../actions/editor';
 
-function changeEditorContentFieldWorker({ name, value }) {
-	return { name, value };
+function changeEditorContentFieldWorker({ name, updater }) {
+	return { name, updater };
 }
 
 function changeEditorContentFieldsWorker({ updater }) {

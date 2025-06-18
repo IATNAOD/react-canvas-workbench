@@ -18,14 +18,23 @@ export default ({
 	onChange = () => {},
 	inputWidth = '100%',
 	wrapperWidth = '100%',
-	background = '#e4d4f4',
+	labelColor = '#53504A',
+	inputColor = '#53504a',
+	inputBackground = '#e4d4f4',
 }) => {
 	return (
 		<div
 			style={{ width: wrapperWidth }}
 			className={classNames({ 'default-input-wrapper': true, error })}
 		>
-			{label && <span className={classNames({ 'input-label': true })}>{label}</span>}
+			{label && (
+				<span
+					style={{ color: labelColor }}
+					className={classNames({ 'input-label': true })}
+				>
+					{label}
+				</span>
+			)}
 			<input
 				name={name}
 				value={value}
@@ -38,8 +47,9 @@ export default ({
 				className={classNames({ input: true })}
 				onKeyUp={(e) => (e.key === 'Enter' ? onEnter() : null)}
 				style={{
-					background: background,
-					border: `1px solid ${background}`,
+					color: inputColor,
+					background: inputBackground,
+					border: `1px solid ${inputBackground}`,
 					width: `calc(${inputWidth} - 50px)`,
 					height: `calc(${inputHeight}px - 2px)`,
 				}}

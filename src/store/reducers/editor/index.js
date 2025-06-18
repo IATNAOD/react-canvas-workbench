@@ -43,9 +43,9 @@ const initialState = {
 
 export default handleActions(
 	{
-		[changeEditorContentFieldAsync.success]: (s, { payload: { name, value } } = {}) => ({
+		[changeEditorContentFieldAsync.success]: (s, { payload: { name, updater } } = {}) => ({
 			...s,
-			content: { ...s.content, [name]: typeof value == 'function' ? value(s.content) : value },
+			content: { ...s.content, [name]: typeof updater == 'function' ? updater(s.content) : updater },
 		}),
 		[changeEditorContentFieldsAsync.success]: (s, { payload: { updater } } = {}) => ({
 			...s,

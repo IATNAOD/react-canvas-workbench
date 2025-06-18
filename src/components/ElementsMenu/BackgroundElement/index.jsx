@@ -18,7 +18,16 @@ import VisibleIcon from '../../Icons/VisibleIcon';
 import { changeEditorContentFields } from '../../../store/actions/editor';
 
 export default React.memo(
-	({ element, selectElement, deleteElement, duplicateElement, toggleElementLock, toggleElementVisibility }) => {
+	({
+		element,
+		customization,
+		customizationSettings,
+		selectElement,
+		deleteElement,
+		duplicateElement,
+		toggleElementLock,
+		toggleElementVisibility,
+	}) => {
 		const selectedElement = useReduxState((s) => s.editorManager.content.selectedElement);
 		const [ShowDeleteAlert, SetShowDeleteAlert] = React.useState(false);
 		const dispatch = useReduxDispatch();
@@ -75,7 +84,7 @@ export default React.memo(
 						<DuplicateIcon
 							width={28}
 							height={28}
-							fill={'#27272A'}
+							fill={customization.listItemControlsIconColor || customizationSettings.listItemControlsIconColor}
 						/>
 					</div>
 					<div
@@ -99,13 +108,13 @@ export default React.memo(
 							<PadlockLockedIcon
 								width={28}
 								height={28}
-								fill={'#27272A'}
+								fill={customization.listItemControlsIconColor || customizationSettings.listItemControlsIconColor}
 							/>
 						) : (
 							<PadlockUnlockedIcon
 								width={28}
 								height={28}
-								fill={'#27272A'}
+								fill={customization.listItemControlsIconColor || customizationSettings.listItemControlsIconColor}
 							/>
 						)}
 					</div>
@@ -130,39 +139,48 @@ export default React.memo(
 							<VisibleIcon
 								width={28}
 								height={28}
-								fill={'#27272A'}
+								fill={customization.listItemControlsIconColor || customizationSettings.listItemControlsIconColor}
 							/>
 						) : (
 							<NotVisibleIcon
 								width={28}
 								height={28}
-								fill={'#27272A'}
+								fill={customization.listItemControlsIconColor || customizationSettings.listItemControlsIconColor}
 							/>
 						)}
 					</div>
 				</div>
 				{selectedElement ? (
 					<div className={classNames({ 'elements-menu-list-item-body': true, 'background-element-settings': true })}>
-						<span className={classNames({ 'background-element-settings-label': true })}>
+						<span
+							style={{ color: customization.settingsLabelColor || customizationSettings.settingsLabelColor }}
+							className={classNames({ 'background-element-settings-label': true })}
+						>
 							{t('elements-menu.background-element.color-label')}
 						</span>
 						<ColorPicker
 							color={selectedElement.color}
+							customization={customization.colorPicker}
 							onColorChange={(color) => (selectedElement.locked ? null : updateElements({ color }))}
 						/>
 						{selectedElement.locked ? null : (
 							<LongPressButton
 								gap={'10px'}
 								height={'36px'}
-								type={'danger'}
 								text={t('elements-menu.delete-element')}
 								onClick={() => SetShowDeleteAlert(true)}
 								onStart={() => SetShowDeleteAlert(false)}
 								onLongPress={() => deleteElement(element.id)}
+								background={
+									customization.listItemDeleteButtonBackgroundColor || customizationSettings.listItemDeleteButtonBackgroundColor
+								}
 							/>
 						)}
 						{ShowDeleteAlert ? (
-							<span className={classNames({ 'elements-menu-list-item-delete-alert': true })}>
+							<span
+								className={classNames({ 'elements-menu-list-item-delete-alert': true })}
+								style={{ color: customization.listItemDeleteAlertColor || customizationSettings.listItemDeleteAlertColor }}
+							>
 								{t('elements-menu.alerts.hold-for-delete')}
 							</span>
 						) : null}

@@ -14,7 +14,30 @@ import {
 	changeEditorContentFields,
 } from '../../store/actions/editor';
 
-export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
+export default ({
+	onPreviewChange = () => {},
+	customization = {
+		snapLineWidth: 0,
+		snapLineColor: '',
+		backgroundColor: '',
+		brushBorderWidth: 0,
+		middleLinesColor: 0,
+		brushBorderColor: '',
+		middleLinesWidth: '',
+		resizeHandleBorderWidth: 1,
+		rotateHandleBorderWidth: 0,
+		resizeHandleBorderColor: '',
+		rotateHandleBorderColor: '',
+		hoveredElementBorderColor: 0,
+		hoveredElementBorderWidth: '',
+		emptyImageBackgroundColor: '',
+		selectedElementBorderWidth: 0,
+		selectedElementBorderColor: '',
+		resizeHandleBackgroundColor: '',
+		rotateHandleBackgroundColor: '',
+	},
+}) => {
+	const customizationSettings = useReduxState((s) => s.customizationManager.editorCanvas);
 	const selectedElement = useReduxState((s) => s.editorManager.content.selectedElement);
 	const canvasHeight = useReduxState((s) => s.editorManager.content.height);
 	const historyIndex = useReduxState((s) => s.editorManager.history.index);
@@ -241,8 +264,10 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 
 			if (ElementsRef.current && ContentCanvasRef.current && ContentCanvasCtxRef.current) {
 				drawContent({
+					customization,
 					width: canvasWidth,
 					height: canvasHeight,
+					customizationSettings,
 					elements: ElementsRef.current,
 					canvas: ContentCanvasRef.current,
 					ctx: ContentCanvasCtxRef.current,
@@ -255,8 +280,10 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 					mouseY,
 					settings,
 					getHandles,
+					customization,
 					width: canvasWidth,
 					height: canvasHeight,
+					customizationSettings,
 					elements: ElementsRef.current,
 					canvas: ToolsCanvasRef.current,
 					ctx: ToolsCanvasCtxRef.current,
@@ -282,8 +309,10 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 
 			if (ElementsRef.current && ContentCanvasRef.current && ContentCanvasCtxRef.current) {
 				drawContent({
+					customization,
 					width: canvasWidth,
 					height: canvasHeight,
+					customizationSettings,
 					elements: ElementsRef.current,
 					canvas: ContentCanvasRef.current,
 					ctx: ContentCanvasCtxRef.current,
@@ -296,8 +325,10 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 					mouseY,
 					settings,
 					getHandles,
+					customization,
 					width: canvasWidth,
 					height: canvasHeight,
+					customizationSettings,
 					elements: ElementsRef.current,
 					canvas: ToolsCanvasRef.current,
 					ctx: ToolsCanvasCtxRef.current,
@@ -499,8 +530,10 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 
 			if (ElementsRef.current && ContentCanvasRef.current && ContentCanvasCtxRef.current) {
 				drawContent({
+					customization,
 					width: canvasWidth,
 					height: canvasHeight,
+					customizationSettings,
 					elements: ElementsRef.current,
 					canvas: ContentCanvasRef.current,
 					ctx: ContentCanvasCtxRef.current,
@@ -513,9 +546,11 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 					mouseY,
 					settings,
 					getHandles,
+					customization,
 					snappedPosition,
 					width: canvasWidth,
 					height: canvasHeight,
+					customizationSettings,
 					elements: ElementsRef.current,
 					canvas: ToolsCanvasRef.current,
 					ctx: ToolsCanvasCtxRef.current,
@@ -563,8 +598,10 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 
 			if (ElementsRef.current && ContentCanvasRef.current && ContentCanvasCtxRef.current) {
 				drawContent({
+					customization,
 					width: canvasWidth,
 					height: canvasHeight,
+					customizationSettings,
 					elements: ElementsRef.current,
 					canvas: ContentCanvasRef.current,
 					ctx: ContentCanvasCtxRef.current,
@@ -577,9 +614,11 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 					mouseY,
 					settings,
 					getHandles,
+					customization,
 					snappedPosition,
 					width: canvasWidth,
 					height: canvasHeight,
+					customizationSettings,
 					elements: ElementsRef.current,
 					canvas: ToolsCanvasRef.current,
 					ctx: ToolsCanvasCtxRef.current,
@@ -610,8 +649,10 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 					mouseY,
 					settings,
 					getHandles,
+					customization,
 					width: canvasWidth,
 					height: canvasHeight,
+					customizationSettings,
 					elements: ElementsRef.current,
 					canvas: ToolsCanvasRef.current,
 					ctx: ToolsCanvasCtxRef.current,
@@ -639,8 +680,10 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 					mouseY,
 					settings,
 					getHandles,
+					customization,
 					width: canvasWidth,
 					height: canvasHeight,
+					customizationSettings,
 					elements: ElementsRef.current,
 					canvas: ToolsCanvasRef.current,
 					ctx: ToolsCanvasCtxRef.current,
@@ -766,8 +809,10 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 				mouseY,
 				settings,
 				getHandles,
+				customization,
 				width: canvasWidth,
 				height: canvasHeight,
+				customizationSettings,
 				elements: ElementsRef.current,
 				canvas: ToolsCanvasRef.current,
 				ctx: ToolsCanvasCtxRef.current,
@@ -799,8 +844,10 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 					mouseY,
 					settings,
 					getHandles,
+					customization,
 					width: canvasWidth,
 					height: canvasHeight,
+					customizationSettings,
 					elements: ElementsRef.current,
 					canvas: ToolsCanvasRef.current,
 					ctx: ToolsCanvasCtxRef.current,
@@ -832,8 +879,10 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 			shouldUpdate = true;
 
 			drawContent({
+				customization,
 				width: canvasWidth,
 				height: canvasHeight,
+				customizationSettings,
 				canvas: SupportCanvasRef.current,
 				ctx: SupportCanvasCtxRef.current,
 				elements: [ElementsRef.current[SelectedElementIndexRef.current]],
@@ -854,7 +903,7 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 			};
 		}
 
-		if (shouldUpdate) dispatch(changeEditorContentField({ name: 'elements', value: ElementsRef.current }));
+		if (shouldUpdate) dispatch(changeEditorContentField({ name: 'elements', updater: ElementsRef.current }));
 
 		if (ContentCanvasRef.current) {
 			const contentCoverDataUrl = ContentCanvasRef.current.toDataURL('image/jpeg', 1);
@@ -870,8 +919,10 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 			drawTools({
 				settings,
 				getHandles,
+				customization,
 				width: canvasWidth,
 				height: canvasHeight,
+				customizationSettings,
 				elements: ElementsRef.current,
 				canvas: ToolsCanvasRef.current,
 				ctx: ToolsCanvasCtxRef.current,
@@ -902,8 +953,10 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 			shouldUpdate = true;
 
 			drawContent({
+				customization,
 				width: canvasWidth,
 				height: canvasHeight,
+				customizationSettings,
 				canvas: SupportCanvasRef.current,
 				ctx: SupportCanvasCtxRef.current,
 				elements: [ElementsRef.current[SelectedElementIndexRef.current]],
@@ -926,7 +979,7 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 			ToolsCanvasCtxRef.current.clearRect(0, 0, ToolsCanvasRef.current.width, ToolsCanvasRef.current.height);
 		}
 
-		if (shouldUpdate) dispatch(changeEditorContentField({ name: 'elements', value: ElementsRef.current }));
+		if (shouldUpdate) dispatch(changeEditorContentField({ name: 'elements', updater: ElementsRef.current }));
 
 		if (ContentCanvasRef.current) {
 			const spreadCoverDataUrl = ContentCanvasRef.current.toDataURL('image/jpeg', 1);
@@ -944,7 +997,7 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 				dispatch(
 					changeEditorContentField({
 						name: 'elements',
-						value: ({ elements, selectedElement }) =>
+						updater: ({ elements, selectedElement }) =>
 							elements.map((element) =>
 								selectedElement && element.id == selectedElement.id
 									? {
@@ -991,8 +1044,10 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 
 		if (ElementsRef.current && ContentCanvasRef.current && ContentCanvasCtxRef.current) {
 			drawContent({
+				customization,
 				width: canvasWidth,
 				height: canvasHeight,
+				customizationSettings,
 				elements: ElementsRef.current,
 				canvas: ContentCanvasRef.current,
 				ctx: ContentCanvasCtxRef.current,
@@ -1003,8 +1058,10 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 			drawTools({
 				settings,
 				getHandles,
+				customization,
 				width: canvasWidth,
 				height: canvasHeight,
+				customizationSettings,
 				elements: ElementsRef.current,
 				canvas: ToolsCanvasRef.current,
 				ctx: ToolsCanvasCtxRef.current,
@@ -1017,7 +1074,7 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 			dispatch(
 				changeEditorContentField({
 					name: 'selectedElement',
-					value: ({ elements, selectedElementId }) => elements.find((e) => e.id == selectedElementId),
+					updater: ({ elements, selectedElementId }) => elements.find((e) => e.id == selectedElementId),
 				})
 			);
 		}
@@ -1040,8 +1097,10 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 
 		if (ElementsRef.current && ContentCanvasRef.current && ContentCanvasCtxRef.current) {
 			drawContent({
+				customization,
 				width: canvasWidth,
 				height: canvasHeight,
+				customizationSettings,
 				elements: ElementsRef.current,
 				canvas: ContentCanvasRef.current,
 				ctx: ContentCanvasCtxRef.current,
@@ -1052,8 +1111,10 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 			drawTools({
 				settings,
 				getHandles,
+				customization,
 				width: canvasWidth,
 				height: canvasHeight,
+				customizationSettings,
 				elements: ElementsRef.current,
 				canvas: ToolsCanvasRef.current,
 				ctx: ToolsCanvasCtxRef.current,
@@ -1098,9 +1159,9 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 			<canvas
 				width={1600}
 				height={800}
-				style={{ background }}
 				ref={(ref) => (ContentCanvasRef.current = ref)}
 				className={classNames({ 'editor-content-canvas-content': true })}
+				style={{ backgroundColor: customization.backgroundColor || customizationSettings.backgroundColor }}
 			/>
 			<canvas
 				width={1600}

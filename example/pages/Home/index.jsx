@@ -1,13 +1,27 @@
 import './style.sass';
 
-import { ElementsMenu, EditorCanvas, EditorControls, useContent, useHistory, useSettings } from '../../../src/index';
 import uuid4 from 'uuid4';
 import React from 'react';
 
+import {
+	useContent,
+	useHistory,
+	useSettings,
+	ElementsMenu,
+	EditorCanvas,
+	EditorControls,
+	useCustomization,
+} from '../../../src/index';
+
 export default ({}) => {
+	const { customization, setCustomizationSettings, changeCustomizationSettings, resetCustomizationSettings } = useCustomization();
 	const { current, list, index, canUndo, canRedo, undo, redo, reset } = useHistory();
 	const { elements, selectedElementId, changeElements } = useContent();
 	const { settings, changeSettings, resetSettings } = useSettings();
+
+	React.useEffect(() => {
+		console.log({ customization });
+	}, [customization]);
 
 	React.useEffect(() => {
 		console.log({ settings });
@@ -47,12 +61,19 @@ export default ({}) => {
 
 		reset({ elements: initialElements });
 
+		changeCustomizationSettings({
+			component: 'elementsMenu',
+			updater: (state) => ({ ...state, openTypesButtonBackgroundColor: 'wheat' }),
+		});
+
 		setTimeout(() => {
 			changeSettings({ handleSize: 16 });
 		}, 1000);
 
 		setTimeout(() => {
 			resetSettings();
+
+			resetCustomizationSettings();
 		}, 3000);
 	}, []);
 

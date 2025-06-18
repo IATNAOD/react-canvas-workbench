@@ -10,18 +10,6 @@
 	"types": "types/index.d.ts",
 	"style": "build/index.cjs.css",
 	"type": "module",
-	"keywords": [
-		"react",
-		"canvas",
-		"graphic",
-		"react-canvas",
-		"canvas-editor"
-	],
-	"files": [
-		"build",
-		"types",
-		"example"
-	],
 	"scripts": {
 		"build:types": "tsc -p types-config.json",
 		"example": "cross-env NODE_ENV=dev parcel example/index.html",
@@ -29,11 +17,6 @@
 		"format": "prettier --write .",
 		"build:dist": "cross-env NODE_ENV=release rollup -c",
 		"prepare": "husky"
-	},
-	"lint-staged": {
-		"*.{js,jsx,ts,tsx,css,scss,md,json}": [
-			"prettier --write"
-		]
 	},
 	"peerDependencies": {
 		"react": "^19.1.0",
@@ -87,5 +70,23 @@
 		"sass": "^1.89.2",
 		"typescript": "^5.8.3",
 		"uuid4": "^2.0.3"
-	}
+	},
+	"lint-staged": {
+		"*.{js,jsx,ts,tsx,css,scss,md,json}": [
+			"prettier --write"
+		]
+	},
+	"keywords": [
+		"react",
+		"canvas",
+		"graphic",
+		"react-canvas",
+		"canvas-editor"
+	],
+	"files": [
+		"build",
+		"types",
+		"example",
+		"licenses"
+	]
 }

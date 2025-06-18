@@ -4,8 +4,20 @@ import classNames from 'classnames';
 import React from 'react';
 
 import { toHex, hsvToRgb, rgbToHsv, getContrastColor } from '../../utils/colors';
+import { useReduxState } from '../../hooks/useRedux';
 
-export default ({ background = '#e4d4f4', color = '', onColorChange = () => {}, copyHexCallback = () => {} }) => {
+export default ({
+	color = '',
+	onColorChange = () => {},
+	copyHexCallback = () => {},
+	customization = {
+		rgbaTextColor: '',
+		inputTextColor: '',
+		backgroundColor: '',
+		inputBackgroundColor: '',
+	},
+}) => {
+	const customizationSettings = useReduxState((s) => s.customizationManager.colorPicker);
 	const [HSDragStared, SetHSDragStared] = React.useState(false);
 	const [Saturation, SetSaturation] = React.useState(100);
 	const [Hex, SetHex] = React.useState('#ff0000ff');
@@ -206,8 +218,8 @@ export default ({ background = '#e4d4f4', color = '', onColorChange = () => {}, 
 
 	return (
 		<div
-			style={{ background }}
 			className={classNames({ 'color-picker': true })}
+			style={{ backgroundColor: customization.backgroundColor || customizationSettings.backgroundColor }}
 		>
 			<canvas
 				width={300}
@@ -266,6 +278,10 @@ export default ({ background = '#e4d4f4', color = '', onColorChange = () => {}, 
 						onChange={updateThroughHex}
 						onKeyDown={(e) => e.stopPropagation()}
 						className={classNames({ 'color-picker-text-input': true })}
+						style={{
+							color: customization.inputTextColor || customizationSettings.inputTextColor,
+							backgroundColor: customization.inputBackgroundColor || customizationSettings.inputBackgroundColor,
+						}}
 					/>
 					<div
 						onClick={copyHex}
@@ -286,8 +302,17 @@ export default ({ background = '#e4d4f4', color = '', onColorChange = () => {}, 
 							onKeyDown={(e) => e.stopPropagation()}
 							className={classNames({ 'color-picker-text-input': true })}
 							onChange={(e) => updateThroughRGBA(e.target.value, Green, Blue, Alpha)}
+							style={{
+								color: customization.inputTextColor || customizationSettings.inputTextColor,
+								backgroundColor: customization.inputBackgroundColor || customizationSettings.inputBackgroundColor,
+							}}
 						/>
-						<label className={classNames({ 'color-picker-rgba-text': true })}>R</label>
+						<label
+							className={classNames({ 'color-picker-rgba-text': true })}
+							style={{ color: customization.rgbaTextColor || customizationSettings.rgbaTextColor }}
+						>
+							R
+						</label>
 					</div>
 					<div className={classNames({ 'color-picker-control-column': true })}>
 						<input
@@ -299,8 +324,17 @@ export default ({ background = '#e4d4f4', color = '', onColorChange = () => {}, 
 							onKeyDown={(e) => e.stopPropagation()}
 							className={classNames({ 'color-picker-text-input': true })}
 							onChange={(e) => updateThroughRGBA(Red, e.target.value, Blue, Alpha)}
+							style={{
+								color: customization.inputTextColor || customizationSettings.inputTextColor,
+								backgroundColor: customization.inputBackgroundColor || customizationSettings.inputBackgroundColor,
+							}}
 						/>
-						<label className={classNames({ 'color-picker-rgba-text': true })}>G</label>
+						<label
+							className={classNames({ 'color-picker-rgba-text': true })}
+							style={{ color: customization.rgbaTextColor || customizationSettings.rgbaTextColor }}
+						>
+							G
+						</label>
 					</div>
 					<div className={classNames({ 'color-picker-control-column': true })}>
 						<input
@@ -312,8 +346,17 @@ export default ({ background = '#e4d4f4', color = '', onColorChange = () => {}, 
 							onKeyDown={(e) => e.stopPropagation()}
 							className={classNames({ 'color-picker-text-input': true })}
 							onChange={(e) => updateThroughRGBA(Red, Green, e.target.value, Alpha)}
+							style={{
+								color: customization.inputTextColor || customizationSettings.inputTextColor,
+								backgroundColor: customization.inputBackgroundColor || customizationSettings.inputBackgroundColor,
+							}}
 						/>
-						<label className={classNames({ 'color-picker-rgba-text': true })}>B</label>
+						<label
+							className={classNames({ 'color-picker-rgba-text': true })}
+							style={{ color: customization.rgbaTextColor || customizationSettings.rgbaTextColor }}
+						>
+							B
+						</label>
 					</div>
 					<div className={classNames({ 'color-picker-control-column': true })}>
 						<input
@@ -325,8 +368,17 @@ export default ({ background = '#e4d4f4', color = '', onColorChange = () => {}, 
 							onKeyDown={(e) => e.stopPropagation()}
 							className={classNames({ 'color-picker-text-input': true })}
 							onChange={(e) => updateThroughRGBA(Red, Green, Blue, e.target.value)}
+							style={{
+								color: customization.inputTextColor || customizationSettings.inputTextColor,
+								backgroundColor: customization.inputBackgroundColor || customizationSettings.inputBackgroundColor,
+							}}
 						/>
-						<label className={classNames({ 'color-picker-rgba-text': true })}>A</label>
+						<label
+							className={classNames({ 'color-picker-rgba-text': true })}
+							style={{ color: customization.rgbaTextColor || customizationSettings.rgbaTextColor }}
+						>
+							A
+						</label>
 					</div>
 				</div>
 			</div>

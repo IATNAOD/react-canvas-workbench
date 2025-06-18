@@ -11,18 +11,18 @@ export default () => {
 	const dispatch = useReduxDispatch();
 
 	const changeWidth = (width) => {
-		dispatch(changeEditorContentField({ name: 'width', value: width }));
+		dispatch(changeEditorContentField({ name: 'width', updater: width }));
 	};
 
 	const changeHeight = (height) => {
-		dispatch(changeEditorContentField({ name: 'height', value: height }));
+		dispatch(changeEditorContentField({ name: 'height', updater: height }));
 	};
 
 	const changeElements = (updater) => {
 		dispatch(
 			changeEditorContentField({
 				name: 'elements',
-				value:
+				updater:
 					typeof updater == 'function'
 						? ({ elements, selectedElement, selectedElementId }) => updater({ elements, selectedElement, selectedElementId })
 						: [...updater],
@@ -44,7 +44,7 @@ export default () => {
 		dispatch(
 			changeEditorContentField({
 				name: 'selectedElement',
-				value:
+				updater:
 					typeof updater == 'function'
 						? ({ elements, selectedElement, selectedElementId }) => updater({ elements, selectedElement, selectedElementId })
 						: { ...updater },

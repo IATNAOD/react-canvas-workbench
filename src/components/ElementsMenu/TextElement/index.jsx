@@ -23,7 +23,17 @@ import TextElementImage from 'url:../../../assets/images/text-element.png';
 import { changeEditorContentField, changeEditorContentFields } from '../../../store/actions/editor';
 
 export default React.memo(
-	({ element, fonts = [], selectElement, deleteElement, duplicateElement, toggleElementLock, toggleElementVisibility }) => {
+	({
+		element,
+		customization,
+		customizationSettings,
+		fonts = [],
+		selectElement,
+		deleteElement,
+		duplicateElement,
+		toggleElementLock,
+		toggleElementVisibility,
+	}) => {
 		const selectedElement = useReduxState((s) => s.editorManager.content.selectedElement);
 		const [ShowDeleteAlert, SetShowDeleteAlert] = React.useState(false);
 		const dispatch = useReduxDispatch();
@@ -31,7 +41,7 @@ export default React.memo(
 
 		const updateElement = (update = {}) => {
 			if (selectedElement && selectedElement.id == element.id)
-				dispatch(changeEditorContentField({ name: 'selectedElement', value: { ...selectedElement, ...update } }));
+				dispatch(changeEditorContentField({ name: 'selectedElement', updater: { ...selectedElement, ...update } }));
 		};
 
 		const updateElements = (update = {}) => {
@@ -85,7 +95,7 @@ export default React.memo(
 						<DuplicateIcon
 							width={28}
 							height={28}
-							fill={'#27272A'}
+							fill={customization.listItemControlsIconColor || customizationSettings.listItemControlsIconColor}
 						/>
 					</div>
 					<div
@@ -109,13 +119,13 @@ export default React.memo(
 							<PadlockLockedIcon
 								width={28}
 								height={28}
-								fill={'#27272A'}
+								fill={customization.listItemControlsIconColor || customizationSettings.listItemControlsIconColor}
 							/>
 						) : (
 							<PadlockUnlockedIcon
 								width={28}
 								height={28}
-								fill={'#27272A'}
+								fill={customization.listItemControlsIconColor || customizationSettings.listItemControlsIconColor}
 							/>
 						)}
 					</div>
@@ -140,28 +150,37 @@ export default React.memo(
 							<VisibleIcon
 								width={28}
 								height={28}
-								fill={'#27272A'}
+								fill={customization.listItemControlsIconColor || customizationSettings.listItemControlsIconColor}
 							/>
 						) : (
 							<NotVisibleIcon
 								width={28}
 								height={28}
-								fill={'#27272A'}
+								fill={customization.listItemControlsIconColor || customizationSettings.listItemControlsIconColor}
 							/>
 						)}
 					</div>
 				</div>
 				{selectedElement ? (
 					<div className={classNames({ 'elements-menu-list-item-body': true, 'text-element-settings': true })}>
-						<span className={classNames({ 'text-element-settings-label': true })}>
+						<span
+							className={classNames({ 'text-element-settings-label': true })}
+							style={{ color: customization.settingsLabelColor || customizationSettings.settingsLabelColor }}
+						>
 							{t('elements-menu.text-element.content-label')}
 						</span>
-						<div className={classNames({ 'text-element-settings-textarea-wrapper': true })}>
+						<div
+							className={classNames({ 'text-element-settings-textarea-wrapper': true })}
+							style={{
+								backgroundColor: customization.settingsInputBackgroundColor || customizationSettings.settingsInputBackgroundColor,
+							}}
+						>
 							<textarea
 								value={selectedElement.content}
 								onBlur={() => (selectedElement.locked ? null : updateElements())}
 								className={classNames({ 'text-element-settings-textarea': true })}
 								onChange={(e) => (selectedElement.locked ? null : updateElement({ content: e.target.value }))}
+								style={{ color: customization.settingsInputColor || customizationSettings.settingsInputColor }}
 							/>
 						</div>
 						<div className={classNames({ 'text-element-settings-row': true })}>
@@ -173,6 +192,9 @@ export default React.memo(
 								onBlur={() => (selectedElement.locked ? null : updateElements())}
 								onEnter={() => (selectedElement.locked ? null : updateElements())}
 								onChange={(e) => (selectedElement.locked ? null : updateElement({ x: parseInt(e.target.value) || 0 }))}
+								labelColor={customization.settingsLabelColor || customizationSettings.settingsLabelColor}
+								inputColor={customization.settingsInputColor || customizationSettings.settingsInputColor}
+								inputBackground={customization.settingsInputBackgroundColor || customizationSettings.settingsInputBackgroundColor}
 							/>
 							<DefaultInput
 								inputHeight={17}
@@ -182,6 +204,9 @@ export default React.memo(
 								onBlur={() => (selectedElement.locked ? null : updateElements())}
 								onEnter={() => (selectedElement.locked ? null : updateElements())}
 								onChange={(e) => (selectedElement.locked ? null : updateElement({ y: parseInt(e.target.value) || 0 }))}
+								labelColor={customization.settingsLabelColor || customizationSettings.settingsLabelColor}
+								inputColor={customization.settingsInputColor || customizationSettings.settingsInputColor}
+								inputBackground={customization.settingsInputBackgroundColor || customizationSettings.settingsInputBackgroundColor}
 							/>
 						</div>
 						<div className={classNames({ 'text-element-settings-row': true })}>
@@ -193,6 +218,9 @@ export default React.memo(
 								onBlur={() => (selectedElement.locked ? null : updateElements())}
 								onEnter={() => (selectedElement.locked ? null : updateElements())}
 								onChange={(e) => (selectedElement.locked ? null : updateElement({ width: parseInt(e.target.value) || 0 }))}
+								labelColor={customization.settingsLabelColor || customizationSettings.settingsLabelColor}
+								inputColor={customization.settingsInputColor || customizationSettings.settingsInputColor}
+								inputBackground={customization.settingsInputBackgroundColor || customizationSettings.settingsInputBackgroundColor}
 							/>
 							<DefaultInput
 								inputHeight={17}
@@ -202,6 +230,9 @@ export default React.memo(
 								onBlur={() => (selectedElement.locked ? null : updateElements())}
 								onEnter={() => (selectedElement.locked ? null : updateElements())}
 								onChange={(e) => (selectedElement.locked ? null : updateElement({ lineHeight: parseInt(e.target.value) || 0 }))}
+								labelColor={customization.settingsLabelColor || customizationSettings.settingsLabelColor}
+								inputColor={customization.settingsInputColor || customizationSettings.settingsInputColor}
+								inputBackground={customization.settingsInputBackgroundColor || customizationSettings.settingsInputBackgroundColor}
 							/>
 						</div>
 						<div className={classNames({ 'text-element-settings-row': true })}>
@@ -220,6 +251,9 @@ export default React.memo(
 												lineHeight: parseInt(e.target.value) || 0,
 											})
 								}
+								labelColor={customization.settingsLabelColor || customizationSettings.settingsLabelColor}
+								inputColor={customization.settingsInputColor || customizationSettings.settingsInputColor}
+								inputBackground={customization.settingsInputBackgroundColor || customizationSettings.settingsInputBackgroundColor}
 							/>
 							<DefaultInput
 								inputHeight={17}
@@ -229,6 +263,9 @@ export default React.memo(
 								onBlur={() => (selectedElement.locked ? null : updateElements())}
 								onEnter={() => (selectedElement.locked ? null : updateElements())}
 								onChange={(e) => (selectedElement.locked ? null : updateElement({ rotate: parseInt(e.target.value) || 0 }))}
+								labelColor={customization.settingsLabelColor || customizationSettings.settingsLabelColor}
+								inputColor={customization.settingsInputColor || customizationSettings.settingsInputColor}
+								inputBackground={customization.settingsInputBackgroundColor || customizationSettings.settingsInputBackgroundColor}
 							/>
 						</div>
 						<SelectWithSearch
@@ -237,6 +274,21 @@ export default React.memo(
 							placeholder={t('elements-menu.text-element.font-family-placeholder')}
 							selected={{ name: selectedElement.fontFamily, value: selectedElement.fontFamily }}
 							onChange={(option) => (selectedElement.locked ? null : updateElements({ fontFamily: option.value }))}
+							labelColor={customization.selectWithSearchLabelColor || customizationSettings.selectWithSearchLabelColor}
+							background={customization.selectWithSearchBackground || customizationSettings.selectWithSearchBackground}
+							valueColor={customization.selectWithSearchValueColor || customizationSettings.selectWithSearchValueColor}
+							searchInputBorderColor={
+								customization.selectWithSearchSearchInputBorderColor ||
+								customizationSettings.selectWithSearchSearchInputBorderColor
+							}
+							pickedValueBackgroundColor={
+								customization.selectWithSearchPickedValueBackgroundColor ||
+								customizationSettings.selectWithSearchPickedValueBackgroundColor
+							}
+							searchInputBackgroundColor={
+								customization.selectWithSearchSearchInputBackgroundColor ||
+								customizationSettings.selectWithSearchSearchInputBackgroundColor
+							}
 						/>
 						<div className={classNames({ 'text-element-settings-align-justify': true })}>
 							<DefaultSelect
@@ -251,6 +303,12 @@ export default React.memo(
 									{ name: t('elements-menu.text-element.align-options.center'), value: 'center' },
 									{ name: t('elements-menu.text-element.align-options.right'), value: 'right' },
 								]}
+								labelColor={customization.selectLabelColor || customizationSettings.selectLabelColor}
+								valueColor={customization.selectValueColor || customizationSettings.selectValueColor}
+								background={customization.selectBackgroundColor || customizationSettings.selectBackgroundColor}
+								pickedValueBackgroundColor={
+									customization.selectPickedValueBackgroundColor || customizationSettings.selectPickedValueBackgroundColor
+								}
 							/>
 							<DefaultSelect
 								label={t('elements-menu.text-element.justify-label')}
@@ -263,25 +321,37 @@ export default React.memo(
 									{ name: t('elements-menu.text-element.option-yes'), value: true },
 									{ name: t('elements-menu.text-element.option-no'), value: false },
 								]}
+								labelColor={customization.selectLabelColor || customizationSettings.selectLabelColor}
+								valueColor={customization.selectValueColor || customizationSettings.selectValueColor}
+								background={customization.selectBackgroundColor || customizationSettings.selectBackgroundColor}
+								pickedValueBackgroundColor={
+									customization.selectPickedValueBackgroundColor || customizationSettings.selectPickedValueBackgroundColor
+								}
 							/>
 						</div>
 						<ColorPicker
 							color={selectedElement.color}
+							customization={customization.colorPicker}
 							onColorChange={(color) => (selectedElement.locked ? null : updateElements({ color }))}
 						/>
 						{selectedElement.locked ? null : (
 							<LongPressButton
 								gap={'10px'}
 								height={'36px'}
-								type={'danger'}
 								text={t('elements-menu.delete-element')}
 								onClick={() => SetShowDeleteAlert(true)}
 								onStart={() => SetShowDeleteAlert(false)}
 								onLongPress={() => deleteElement(element.id)}
+								background={
+									customization.listItemDeleteButtonBackgroundColor || customizationSettings.listItemDeleteButtonBackgroundColor
+								}
 							/>
 						)}
 						{ShowDeleteAlert ? (
-							<span className={classNames({ 'elements-menu-list-item-delete-alert': true })}>
+							<span
+								className={classNames({ 'elements-menu-list-item-delete-alert': true })}
+								style={{ color: customization.listItemDeleteAlertColor || customizationSettings.listItemDeleteAlertColor }}
+							>
 								{t('elements-menu.alerts.hold-for-delete')}
 							</span>
 						) : null}

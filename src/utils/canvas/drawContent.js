@@ -1,6 +1,6 @@
 import drawText from './drawText';
 
-export default ({ canvas, ctx, width, height, elements }) => {
+export default ({ canvas, ctx, width, height, elements, customization, customizationSettings }) => {
 	const scale = width / 1600;
 
 	canvas.width = width / scale;
@@ -44,7 +44,7 @@ export default ({ canvas, ctx, width, height, elements }) => {
 		} else if (element.type == 'image' && element.image != null && element.image?.src) {
 			ctx.drawImage(element.image, x, y, element.width / scale, element.height / scale);
 		} else if (element.type == 'image' && (element.image == null || (element.image != null && !element.image.src))) {
-			ctx.fillStyle = '#3c5eec';
+			ctx.fillStyle = customization.emptyImageBackgroundColor || customizationSettings.emptyImageBackgroundColor;
 			ctx.fillRect(x, y, element.width / scale, element.height / scale);
 		} else if (element.type == 'figure') {
 			let firgure = new Path2D();
