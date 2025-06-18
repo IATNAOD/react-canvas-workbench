@@ -124,6 +124,98 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 		);
 	};
 
+	const getRotatedCorners = (x, y, width, height, rotate) => {
+		const angle = (rotate * Math.PI) / 180;
+
+		const cx = x + width / 2;
+		const cy = y + height / 2;
+
+		const corners = [
+			{ x: x, y: y },
+			{ x: x + width, y: y },
+			{ x: x + width, y: y + height },
+			{ x: x, y: y + height },
+		];
+
+		return corners.map((corner) => ({
+			x: cx + (corner.x - cx) * Math.cos(angle) - (corner.y - cy) * Math.sin(angle),
+			y: cy + (corner.x - cx) * Math.sin(angle) + (corner.y - cy) * Math.cos(angle),
+		}));
+	};
+
+	const getEdgesFromCorners = (corners) => [
+		{ a: corners[0], b: corners[1] },
+		{ a: corners[1], b: corners[2] },
+		{ a: corners[2], b: corners[3] },
+		{ a: corners[3], b: corners[0] },
+	];
+
+	const getEdgeCenter = (edge) => ({
+		x: (edge.a.x + edge.b.x) / 2,
+		y: (edge.a.y + edge.b.y) / 2,
+	});
+
+	const getPointsSortByHandle = (handle) =>
+		({
+			n: (a, b) => a.y - b.y,
+			s: (a, b) => b.y - a.y,
+			w: (a, b) => a.x - b.x,
+			e: (a, b) => b.x - a.x,
+
+			nw: (a, b) => a.y - b.y || a.x - b.x,
+			ne: (a, b) => a.y - b.y || b.x - a.x,
+			sw: (a, b) => b.y - a.y || a.x - b.x,
+			se: (a, b) => b.y - a.y || b.x - a.x,
+		})[handle];
+
+	const checkSnap = (elementA, elementB, center = false) => {
+		const cornersA = getRotatedCorners(elementA.x, elementA.y, elementA.width, elementA.height, elementA.rotate);
+		const cornersB = getRotatedCorners(elementB.x, elementB.y, elementB.width, elementB.height, elementB.rotate);
+
+		const edgesA = getEdgesFromCorners(cornersA).map(getEdgeCenter);
+		const edgesB = getEdgesFromCorners(cornersB).map(getEdgeCenter);
+
+		const pointsA = cornersA.concat(edgesA);
+		const pointsB = cornersB.concat(edgesB);
+
+		if (elementA.handle) pointsA.sort(getPointsSortByHandle(elementA.handle));
+		if (elementB.handle) pointsB.sort(getPointsSortByHandle(elementB.handle));
+
+		let dx = 0;
+		let dy = 0;
+		let snapLines = [];
+		let snappedX = false;
+		let snappedY = false;
+
+		for (const a of pointsA) {
+			for (const b of pointsB) {
+				if (!snappedX && Math.abs(a.x - b.x) <= settings.snap) {
+					dx = b.x - a.x;
+
+					snappedX = true;
+
+					snapLines.push({ center, axis: 'x', from: { x: b.x, y: a.y }, to: b });
+				}
+
+				if (!snappedY && Math.abs(a.y - b.y) <= settings.snap) {
+					dy = b.y - a.y;
+
+					snappedY = true;
+
+					snapLines.push({ center, axis: 'y', from: { x: a.x, y: b.y }, to: b });
+				}
+
+				if (snappedX && snappedY) break;
+			}
+
+			if (snappedX && snappedY) break;
+		}
+
+		if (snappedX || snappedY) return { x: elementA.x + dx, y: elementA.y + dy, snapLines };
+
+		return null;
+	};
+
 	const getMousePosition = (e) => {
 		const rect = ToolsCanvasRef.current.getBoundingClientRect();
 
@@ -161,13 +253,13 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 				drawTools({
 					mouseX,
 					mouseY,
+					settings,
 					getHandles,
 					width: canvasWidth,
 					height: canvasHeight,
 					elements: ElementsRef.current,
 					canvas: ToolsCanvasRef.current,
 					ctx: ToolsCanvasCtxRef.current,
-					showMiddleLines: settings.showMiddleLines,
 					hoveredElementIndex: HoveredElementIndexRef.current,
 					selectedElementIndex: SelectedElementIndexRef.current,
 				});
@@ -202,13 +294,13 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 				drawTools({
 					mouseX,
 					mouseY,
+					settings,
 					getHandles,
 					width: canvasWidth,
 					height: canvasHeight,
 					elements: ElementsRef.current,
 					canvas: ToolsCanvasRef.current,
 					ctx: ToolsCanvasCtxRef.current,
-					showMiddleLines: settings.showMiddleLines,
 					hoveredElementIndex: HoveredElementIndexRef.current,
 					selectedElementIndex: SelectedElementIndexRef.current,
 				});
@@ -360,6 +452,44 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 			newX = newElementCenterX - newWidth / 2;
 			newY = newElementCenterY - newHeight / 2;
 
+			let snappedPosition = checkSnap(
+				{ handle, x: newX, y: newY, width: newWidth, height: newHeight, rotate: element.rotate },
+				{ x: 0, y: 0, rotate: 0, width: ToolsCanvasRef.current.width * scale, height: ToolsCanvasRef.current.height * scale }
+			);
+
+			if (!snappedPosition) {
+				ElementsRef.current.forEach((other, index) => {
+					if (index == SelectedElementIndexRef.current) return;
+
+					snappedPosition = checkSnap(
+						{ handle, x: newX, y: newY, width: newWidth, height: newHeight, rotate: element.rotate },
+						{ x: other.x, y: other.y, width: other.width, height: other.height, rotate: other.rotate }
+					);
+
+					if (snappedPosition) return;
+				});
+			}
+
+			if (snappedPosition) {
+				if (handle.includes('e')) {
+					newWidth = snappedPosition.x + newWidth - newX;
+				}
+
+				if (handle.includes('w')) {
+					newWidth = newX + newWidth - snappedPosition.x;
+					newX = snappedPosition.x;
+				}
+
+				if (handle.includes('s')) {
+					newHeight = snappedPosition.y + newHeight - newY;
+				}
+
+				if (handle.includes('n')) {
+					newHeight = newY + newHeight - snappedPosition.y;
+					newY = snappedPosition.y;
+				}
+			}
+
 			ElementsRef.current[SelectedElementIndexRef.current] = {
 				...ElementsRef.current[SelectedElementIndexRef.current],
 				...(newWidth > 40 ? { x: newX, width: newWidth } : {}),
@@ -381,13 +511,14 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 				drawTools({
 					mouseX,
 					mouseY,
+					settings,
 					getHandles,
+					snappedPosition,
 					width: canvasWidth,
 					height: canvasHeight,
 					elements: ElementsRef.current,
 					canvas: ToolsCanvasRef.current,
 					ctx: ToolsCanvasCtxRef.current,
-					showMiddleLines: settings.showMiddleLines,
 					hoveredElementIndex: HoveredElementIndexRef.current,
 					selectedElementIndex: SelectedElementIndexRef.current,
 				});
@@ -398,118 +529,30 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 			let newX = (mouseX - DragStateRef.current.offsetX) * (canvasWidth / 1600);
 			let newY = (mouseY - DragStateRef.current.offsetY) * (canvasWidth / 1600);
 
-			if (!DragStateRef.current.isShift && element.rotate % 180 == 0) {
-				const scale = canvasWidth / 1600;
+			const scale = canvasWidth / 1600;
 
-				// left canvas edge
-				if (Math.abs(newX) < settings.snap) {
-					newX = 0;
-				}
+			let snappedPosition = checkSnap(
+				{ x: newX, y: newY, width: element.width, height: element.height, rotate: element.rotate },
+				{ x: 0, y: 0, rotate: 0, width: ToolsCanvasRef.current.width * scale, height: ToolsCanvasRef.current.height * scale },
+				true
+			);
 
-				// top canvas edge
-				if (Math.abs(newY) < settings.snap) {
-					newY = 0;
-				}
-
-				// right canvas edge
-				if (Math.abs((newX + element.width) / scale - ToolsCanvasRef.current.width) < settings.snap) {
-					newX = ToolsCanvasRef.current.width * scale - element.width;
-				}
-
-				// bottom canvas edge
-				if (Math.abs((newY + element.height) / scale - ToolsCanvasRef.current.height) < settings.snap) {
-					newY = ToolsCanvasRef.current.height * scale - element.height;
-				}
-
-				// right canvas top-bottom middle line
-				if (Math.abs(newX / scale - ToolsCanvasRef.current.width / 2) < settings.snap) {
-					newX = (ToolsCanvasRef.current.width / 2) * scale;
-				}
-
-				// left canvas top-bottom middle line
-				if (Math.abs((newX + element.width) / scale - ToolsCanvasRef.current.width / 2) < settings.snap) {
-					newX = (ToolsCanvasRef.current.width / 2) * scale - element.width;
-				}
-
-				// right canvas left-right middle line
-				if (Math.abs(newY / scale - ToolsCanvasRef.current.height / 2) < settings.snap) {
-					newY = (ToolsCanvasRef.current.height / 2) * scale;
-				}
-
-				// left canvas left-right middle line
-				if (Math.abs((newY + element.height) / scale - ToolsCanvasRef.current.height / 2) < settings.snap) {
-					newY = (ToolsCanvasRef.current.height / 2) * scale - element.height;
-				}
-
-				// left canvas top-bottom middle line
-				if (Math.abs((newX + element.width / 2) / scale - ToolsCanvasRef.current.width / 2) < settings.snap) {
-					newX = (ToolsCanvasRef.current.width / 2) * scale - element.width / 2;
-				}
-
-				// left canvas left-right middle line
-				if (Math.abs((newY + element.height / 2) / scale - ToolsCanvasRef.current.height / 2) < settings.snap) {
-					newY = (ToolsCanvasRef.current.height / 2) * scale - element.height / 2;
-				}
-
+			if (!snappedPosition) {
 				ElementsRef.current.forEach((other, index) => {
 					if (index == SelectedElementIndexRef.current) return;
 
-					if (Math.abs((newX - (other.x + other.width)) / scale) < settings.snap) {
-						newX = other.x + other.width;
-					}
+					snappedPosition = checkSnap(
+						{ x: newX, y: newY, width: element.width, height: element.height, rotate: element.rotate },
+						{ x: other.x, y: other.y, width: other.width, height: other.height, rotate: other.rotate }
+					);
 
-					if (Math.abs((newX + element.width - other.x) / scale) < settings.snap) {
-						newX = other.x - element.width;
-					}
-
-					if (Math.abs((newX - other.x) / scale) < settings.snap) {
-						newX = other.x;
-					}
-
-					if (Math.abs((newX + element.width - (other.x + other.width)) / scale) < settings.snap) {
-						newX = other.x + (other.width - element.width);
-					}
-
-					if (Math.abs((newY - (other.y + other.height)) / scale) < settings.snap) {
-						newY = other.y + other.height;
-					}
-
-					if (Math.abs((newY + element.height - other.y) / scale) < settings.snap) {
-						newY = other.y - element.height;
-					}
-
-					if (Math.abs((newY - other.y) / scale) < settings.snap) {
-						newY = other.y;
-					}
-
-					if (Math.abs((newY + element.height - (other.y + other.height)) / scale) < settings.snap) {
-						newY = other.y + (other.height - element.height);
-					}
-
-					if (Math.abs((newX + element.width / 2 - (other.x + other.width / 2)) / scale) < settings.snap) {
-						newX = other.x + (other.width / 2 - element.width / 2);
-					}
-
-					if (Math.abs((newY + element.height / 2 - (other.y + other.height / 2)) / scale) < settings.snap) {
-						newY = other.y + (other.height / 2 - element.height / 2);
-					}
-
-					if (Math.abs((newX - (other.x + other.width / 2)) / scale) < settings.snap) {
-						newX = other.x + other.width / 2;
-					}
-
-					if (Math.abs((newY - (other.y + other.height / 2)) / scale) < settings.snap) {
-						newY = other.y + other.height / 2;
-					}
-
-					if (Math.abs((newX + element.width - (other.x + other.width / 2)) / scale) < settings.snap) {
-						newX = other.x + other.width / 2 - element.width;
-					}
-
-					if (Math.abs((newY + element.height - (other.y + other.height / 2)) / scale) < settings.snap) {
-						newY = other.y + other.height / 2 - element.height;
-					}
+					if (snappedPosition) return;
 				});
+			}
+
+			if (snappedPosition) {
+				newX = snappedPosition.x;
+				newY = snappedPosition.y;
 			}
 
 			ElementsRef.current[SelectedElementIndexRef.current] = {
@@ -532,13 +575,14 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 				drawTools({
 					mouseX,
 					mouseY,
+					settings,
 					getHandles,
+					snappedPosition,
 					width: canvasWidth,
 					height: canvasHeight,
 					elements: ElementsRef.current,
 					canvas: ToolsCanvasRef.current,
 					ctx: ToolsCanvasCtxRef.current,
-					showMiddleLines: settings.showMiddleLines,
 					hoveredElementIndex: HoveredElementIndexRef.current,
 					selectedElementIndex: SelectedElementIndexRef.current,
 				});
@@ -559,22 +603,22 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 					HoveredElementIndexRef.current = null;
 				}
 			}
-		}
 
-		if (ElementsRef.current && ToolsCanvasRef.current && ToolsCanvasCtxRef.current) {
-			drawTools({
-				mouseX,
-				mouseY,
-				getHandles,
-				width: canvasWidth,
-				height: canvasHeight,
-				elements: ElementsRef.current,
-				canvas: ToolsCanvasRef.current,
-				ctx: ToolsCanvasCtxRef.current,
-				showMiddleLines: settings.showMiddleLines,
-				hoveredElementIndex: HoveredElementIndexRef.current,
-				selectedElementIndex: SelectedElementIndexRef.current,
-			});
+			if (ElementsRef.current && ToolsCanvasRef.current && ToolsCanvasCtxRef.current) {
+				drawTools({
+					mouseX,
+					mouseY,
+					settings,
+					getHandles,
+					width: canvasWidth,
+					height: canvasHeight,
+					elements: ElementsRef.current,
+					canvas: ToolsCanvasRef.current,
+					ctx: ToolsCanvasCtxRef.current,
+					hoveredElementIndex: HoveredElementIndexRef.current,
+					selectedElementIndex: SelectedElementIndexRef.current,
+				});
+			}
 		}
 	};
 
@@ -593,13 +637,13 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 				drawTools({
 					mouseX,
 					mouseY,
+					settings,
 					getHandles,
 					width: canvasWidth,
 					height: canvasHeight,
 					elements: ElementsRef.current,
 					canvas: ToolsCanvasRef.current,
 					ctx: ToolsCanvasCtxRef.current,
-					showMiddleLines: settings.showMiddleLines,
 					hoveredElementIndex: HoveredElementIndexRef.current,
 					selectedElementIndex: SelectedElementIndexRef.current,
 				});
@@ -720,13 +764,13 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 			drawTools({
 				mouseX,
 				mouseY,
+				settings,
 				getHandles,
 				width: canvasWidth,
 				height: canvasHeight,
 				elements: ElementsRef.current,
 				canvas: ToolsCanvasRef.current,
 				ctx: ToolsCanvasCtxRef.current,
-				showMiddleLines: settings.showMiddleLines,
 				hoveredElementIndex: HoveredElementIndexRef.current,
 				selectedElementIndex: SelectedElementIndexRef.current,
 			});
@@ -753,20 +797,40 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 				drawTools({
 					mouseX,
 					mouseY,
+					settings,
 					getHandles,
 					width: canvasWidth,
 					height: canvasHeight,
 					elements: ElementsRef.current,
 					canvas: ToolsCanvasRef.current,
 					ctx: ToolsCanvasCtxRef.current,
-					showMiddleLines: settings.showMiddleLines,
 					hoveredElementIndex: HoveredElementIndexRef.current,
 					selectedElementIndex: SelectedElementIndexRef.current,
 				});
 			}
 		}
 
+		let shouldUpdate = false;
+
+		if (DragStateRef.current.isDragging || DragStateRef.current.isResizing || DragStateRef.current.isRotating) {
+			DragStateRef.current = {
+				...DragStateRef.current,
+				isDragging: false,
+				isResizing: false,
+				isRotating: false,
+			};
+
+			shouldUpdate = true;
+		}
+
 		if (DragStateRef.current.isDrawing) {
+			DragStateRef.current = {
+				...DragStateRef.current,
+				isDrawing: false,
+			};
+
+			shouldUpdate = true;
+
 			drawContent({
 				width: canvasWidth,
 				height: canvasHeight,
@@ -790,22 +854,7 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 			};
 		}
 
-		if (
-			DragStateRef.current.isDragging ||
-			DragStateRef.current.isResizing ||
-			DragStateRef.current.isRotating ||
-			DragStateRef.current.isDrawing
-		) {
-			DragStateRef.current = {
-				...DragStateRef.current,
-				isDragging: false,
-				isResizing: false,
-				isRotating: false,
-				isDrawing: false,
-			};
-
-			dispatch(changeEditorContentField({ name: 'elements', value: ElementsRef.current }));
-		}
+		if (shouldUpdate) dispatch(changeEditorContentField({ name: 'elements', value: ElementsRef.current }));
 
 		if (ContentCanvasRef.current) {
 			const contentCoverDataUrl = ContentCanvasRef.current.toDataURL('image/jpeg', 1);
@@ -819,19 +868,39 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 
 		if (ElementsRef.current && ToolsCanvasRef.current && ToolsCanvasCtxRef.current) {
 			drawTools({
+				settings,
 				getHandles,
 				width: canvasWidth,
 				height: canvasHeight,
 				elements: ElementsRef.current,
 				canvas: ToolsCanvasRef.current,
 				ctx: ToolsCanvasCtxRef.current,
-				showMiddleLines: settings.showMiddleLines,
 				hoveredElementIndex: HoveredElementIndexRef.current,
 				selectedElementIndex: SelectedElementIndexRef.current,
 			});
 		}
 
+		let shouldUpdate = false;
+
+		if (DragStateRef.current.isDragging || DragStateRef.current.isResizing || DragStateRef.current.isRotating) {
+			DragStateRef.current = {
+				...DragStateRef.current,
+				isDragging: false,
+				isResizing: false,
+				isRotating: false,
+			};
+
+			shouldUpdate = true;
+		}
+
 		if (DragStateRef.current.isDrawing) {
+			DragStateRef.current = {
+				...DragStateRef.current,
+				isDrawing: false,
+			};
+
+			shouldUpdate = true;
+
 			drawContent({
 				width: canvasWidth,
 				height: canvasHeight,
@@ -857,22 +926,7 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 			ToolsCanvasCtxRef.current.clearRect(0, 0, ToolsCanvasRef.current.width, ToolsCanvasRef.current.height);
 		}
 
-		if (
-			DragStateRef.current.isDragging ||
-			DragStateRef.current.isResizing ||
-			DragStateRef.current.isRotating ||
-			DragStateRef.current.isDrawing
-		) {
-			DragStateRef.current = {
-				...DragStateRef.current,
-				isDragging: false,
-				isResizing: false,
-				isRotating: false,
-				isDrawing: false,
-			};
-
-			dispatch(changeEditorContentField({ name: 'elements', value: ElementsRef.current }));
-		}
+		if (shouldUpdate) dispatch(changeEditorContentField({ name: 'elements', value: ElementsRef.current }));
 
 		if (ContentCanvasRef.current) {
 			const spreadCoverDataUrl = ContentCanvasRef.current.toDataURL('image/jpeg', 1);
@@ -895,8 +949,14 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 								selectedElement && element.id == selectedElement.id
 									? {
 											...selectedElement,
-											x: selectedElement.x + settings.positionChangeByArrows[e.key].x * (e.shiftKey ? 10 : 1),
-											y: selectedElement.y + settings.positionChangeByArrows[e.key].y * (e.shiftKey ? 10 : 1),
+											x:
+												selectedElement.x +
+												settings.positionChangeByArrows[e.key].x *
+													(e.shiftKey ? settings.positionChangeByArrowsShiftMultiplier : 1),
+											y:
+												selectedElement.y +
+												settings.positionChangeByArrows[e.key].y *
+													(e.shiftKey ? settings.positionChangeByArrowsShiftMultiplier : 1),
 										}
 									: element
 							),
@@ -941,13 +1001,13 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 
 		if (ElementsRef.current && ContentCanvasRef.current && ContentCanvasCtxRef.current) {
 			drawTools({
+				settings,
 				getHandles,
 				width: canvasWidth,
 				height: canvasHeight,
 				elements: ElementsRef.current,
 				canvas: ToolsCanvasRef.current,
 				ctx: ToolsCanvasCtxRef.current,
-				showMiddleLines: settings.showMiddleLines,
 				hoveredElementIndex: HoveredElementIndexRef.current,
 				selectedElementIndex: SelectedElementIndexRef.current,
 			});
@@ -990,13 +1050,13 @@ export default ({ background = 'transparent', onPreviewChange = () => {} }) => {
 
 		if (ElementsRef.current && ContentCanvasRef.current && ContentCanvasCtxRef.current) {
 			drawTools({
+				settings,
 				getHandles,
 				width: canvasWidth,
 				height: canvasHeight,
 				elements: ElementsRef.current,
 				canvas: ToolsCanvasRef.current,
 				ctx: ToolsCanvasCtxRef.current,
-				showMiddleLines: settings.showMiddleLines,
 				hoveredElementIndex: HoveredElementIndexRef.current,
 				selectedElementIndex: SelectedElementIndexRef.current,
 			});

@@ -5,11 +5,10 @@ import {
 	redoHistoryAsync,
 	resetHistoryAsync,
 	selectElementAsync,
-	changeEditorFieldAsync,
 	saveStateToHistoryAsync,
 	changeEditorContentFieldAsync,
 	changeEditorContentFieldsAsync,
-	changeEditorSettingsFieldAsync,
+	changeEditorSettingsFieldsAsync,
 } from '../../actions/editor';
 
 const initialState = {
@@ -27,11 +26,12 @@ const initialState = {
 		canRedo: false,
 	},
 	settings: {
-		snap: 10,
+		snap: 30,
 		handleSize: 8,
 		rotateHandleSize: 16,
 		showMiddleLines: true,
 		rotatehandleOffset: 30,
+		positionChangeByArrowsShiftMultiplier: 10,
 		positionChangeByArrows: {
 			ArrowUp: { x: 0, y: -1 },
 			ArrowRight: { x: 1, y: 0 },
@@ -43,7 +43,6 @@ const initialState = {
 
 export default handleActions(
 	{
-		[changeEditorFieldAsync.success]: (s, { payload: { name, value } } = {}) => ({ ...s, [name]: value }),
 		[changeEditorContentFieldAsync.success]: (s, { payload: { name, value } } = {}) => ({
 			...s,
 			content: { ...s.content, [name]: typeof value == 'function' ? value(s.content) : value },
@@ -52,16 +51,16 @@ export default handleActions(
 			...s,
 			content: { ...s.content, ...(typeof updater == 'function' ? updater(s.content) : updater) },
 		}),
-		[changeEditorSettingsFieldAsync.success]: (s, { payload: { name, value } } = {}) => ({
+		[changeEditorSettingsFieldsAsync.success]: (s, { payload: { updater } } = {}) => ({
 			...s,
-			settings: { ...s.settings, [name]: typeof value == 'function' ? value(s.settings) : value },
+			settings: { ...s.settings, ...(typeof updater == 'function' ? updater(s.settings) : updater) },
 		}),
 		[selectElementAsync.success]: (s, { payload: { element } } = {}) => ({
 			...s,
 			content: {
 				...s.content,
-				selectedElement: s.content.selectedElementId == element.id ? null : element,
-				selectedElementId: s.content.selectedElementId == element.id ? null : element.id,
+				selectedElement: !element || (element && s.content.selectedElementId == element.id) ? null : element,
+				selectedElementId: !element || (element && s.content.selectedElementId == element.id) ? null : element.id,
 				elements: s.content.elements.map((v) => (v.id == s.content.selectedElementId ? s.content.selectedElement : v)),
 			},
 		}),

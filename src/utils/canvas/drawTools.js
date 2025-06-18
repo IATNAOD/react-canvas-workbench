@@ -8,12 +8,12 @@ export default ({
 	elements,
 	settings,
 	getHandles,
-	showMiddleLines,
+	snappedPosition,
 	hoveredElementIndex,
 	selectedElementIndex,
 }) => {
 	// set default settings
-	if (!settings) settings = { handleSize: 8, rotateHandleSize: 16 };
+	if (!settings) settings = { showMiddleLines: true, rotateHandleSize: 16, handleSize: 8, snap: 10 };
 
 	const scale = width / 1600;
 
@@ -84,6 +84,16 @@ export default ({
 			Object.entries(handles).forEach(([name, { x, y }]) => {
 				ctx.save();
 
+				if (selectedElement.rotate) {
+					const angle = (selectedElement.rotate * Math.PI) / 180;
+
+					ctx.translate(x, y);
+					ctx.rotate(angle);
+
+					x = 0;
+					y = 0;
+				}
+
 				if (name == 'rotate') {
 					ctx.fillStyle = '#F5A524';
 					ctx.strokeStyle = 'black';
@@ -140,7 +150,38 @@ export default ({
 		}
 	}
 
-	if (showMiddleLines) {
+	if (selectedElement && snappedPosition) {
+		ctx.save();
+
+		ctx.strokeStyle = '#3c5eec';
+		ctx.setLineDash([0, 0]);
+		ctx.lineWidth = 2;
+
+		for (const line of snappedPosition.snapLines) {
+			if (line.center) {
+				if (line.axis === 'x') {
+					ctx.beginPath();
+					ctx.moveTo(line.from.x / scale - 1, 0);
+					ctx.lineTo(line.from.x / scale - 1, canvas.height);
+					ctx.stroke();
+				} else if (line.axis === 'y') {
+					ctx.beginPath();
+					ctx.moveTo(0, line.from.y / scale - 1);
+					ctx.lineTo(canvas.width, line.from.y / scale - 1);
+					ctx.stroke();
+				}
+			} else {
+				ctx.beginPath();
+				ctx.moveTo(line.from.x / scale, line.from.y / scale);
+				ctx.lineTo(line.to.x / scale, line.to.y / scale);
+				ctx.stroke();
+			}
+		}
+
+		ctx.restore();
+	}
+
+	if (settings.showMiddleLines) {
 		ctx.save();
 
 		ctx.strokeStyle = '#3c5eec';

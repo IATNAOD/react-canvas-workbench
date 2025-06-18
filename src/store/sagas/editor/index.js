@@ -11,21 +11,15 @@ import {
 	resetHistoryAsync,
 	selectElement,
 	selectElementAsync,
-	changeEditorField,
 	saveStateToHistory,
 	saveStateToHistoryAsync,
-	changeEditorFieldAsync,
 	changeEditorContentField,
 	changeEditorContentFieldAsync,
 	changeEditorContentFields,
 	changeEditorContentFieldsAsync,
-	changeEditorSettingsField,
-	changeEditorSettingsFieldAsync,
+	changeEditorSettingsFields,
+	changeEditorSettingsFieldsAsync,
 } from '../../actions/editor';
-
-function changeFieldWorker({ name, value }) {
-	return { name, value };
-}
 
 function changeEditorContentFieldWorker({ name, value }) {
 	return { name, value };
@@ -35,8 +29,8 @@ function changeEditorContentFieldsWorker({ updater }) {
 	return { updater };
 }
 
-function changeEditorSettingsFieldWorker({ name, value }) {
-	return { name, value };
+function changeEditorSettingsFieldsWorker({ updater }) {
+	return { updater };
 }
 
 function selectElementWorker({ element }) {
@@ -60,10 +54,12 @@ function redoHistoryWorker() {
 }
 
 export function* editorSaga() {
-	yield takeEvery(changeEditorField, bindAsyncActions(changeEditorFieldAsync)(changeFieldWorker));
 	yield takeEvery(changeEditorContentField, bindAsyncActions(changeEditorContentFieldAsync)(changeEditorContentFieldWorker));
 	yield takeEvery(changeEditorContentFields, bindAsyncActions(changeEditorContentFieldsAsync)(changeEditorContentFieldsWorker));
-	yield takeEvery(changeEditorSettingsField, bindAsyncActions(changeEditorSettingsFieldAsync)(changeEditorSettingsFieldWorker));
+	yield takeEvery(
+		changeEditorSettingsFields,
+		bindAsyncActions(changeEditorSettingsFieldsAsync)(changeEditorSettingsFieldsWorker)
+	);
 	yield takeEvery(selectElement, bindAsyncActions(selectElementAsync)(selectElementWorker));
 	yield takeEvery(saveStateToHistory, bindAsyncActions(saveStateToHistoryAsync)(saveStateToHistoryWorker));
 	yield takeEvery(resetHistory, bindAsyncActions(resetHistoryAsync)(resetHistoryWorker));

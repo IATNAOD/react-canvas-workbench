@@ -1,16 +1,25 @@
 import './style.sass';
 
-import { ElementsMenu, EditorCanvas, EditorControls, useElements, useHistory } from '../../../src/index';
+import { ElementsMenu, EditorCanvas, EditorControls, useContent, useHistory, useSettings } from '../../../src/index';
 import uuid4 from 'uuid4';
 import React from 'react';
 
 export default ({}) => {
 	const { current, list, index, canUndo, canRedo, undo, redo, reset } = useHistory();
-	const { elements, changeElements } = useElements();
+	const { elements, selectedElementId, changeElements } = useContent();
+	const { settings, changeSettings, resetSettings } = useSettings();
+
+	React.useEffect(() => {
+		console.log({ settings });
+	}, [settings]);
 
 	React.useEffect(() => {
 		console.log({ elements });
 	}, [elements]);
+
+	React.useEffect(() => {
+		console.log({ selectedElementId });
+	}, [selectedElementId]);
 
 	React.useEffect(() => {
 		console.log({ current, list, index, canUndo, canRedo });
@@ -37,6 +46,14 @@ export default ({}) => {
 		changeElements(initialElements);
 
 		reset({ elements: initialElements });
+
+		setTimeout(() => {
+			changeSettings({ handleSize: 16 });
+		}, 1000);
+
+		setTimeout(() => {
+			resetSettings();
+		}, 3000);
 	}, []);
 
 	return (
