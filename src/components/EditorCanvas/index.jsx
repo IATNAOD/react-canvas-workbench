@@ -46,6 +46,7 @@ export default ({
 	const canUndo = useReduxState((s) => s.editorManager.history.canUndo);
 	const canRedo = useReduxState((s) => s.editorManager.history.canRedo);
 	const history = useReduxState((s) => s.editorManager.history.list);
+	const fonts = useReduxState((s) => s.editorManager.content.fonts);
 	const settings = useReduxState((s) => s.editorManager.settings);
 	const dispatch = useReduxDispatch();
 
@@ -485,7 +486,8 @@ export default ({
 
 			let snappedPosition = checkSnap(
 				{ handle, x: newX, y: newY, width: newWidth, height: newHeight, rotate: element.rotate },
-				{ x: 0, y: 0, rotate: 0, width: ToolsCanvasRef.current.width * scale, height: ToolsCanvasRef.current.height * scale }
+				{ x: 0, y: 0, rotate: 0, width: ToolsCanvasRef.current.width * scale, height: ToolsCanvasRef.current.height * scale },
+				true
 			);
 
 			if (!snappedPosition) {
@@ -1138,6 +1140,40 @@ export default ({
 		}
 	}, []);
 
+	React.useEffect(() => {
+		document.fonts.ready
+			.then(() => {
+				if (ElementsRef.current && ContentCanvasRef.current && ContentCanvasCtxRef.current) {
+					drawContent({
+						customization,
+						width: canvasWidth,
+						height: canvasHeight,
+						customizationSettings,
+						elements: ElementsRef.current,
+						canvas: ContentCanvasRef.current,
+						ctx: ContentCanvasCtxRef.current,
+					});
+				}
+
+				if (ElementsRef.current && ContentCanvasRef.current && ContentCanvasCtxRef.current) {
+					drawTools({
+						settings,
+						getHandles,
+						customization,
+						width: canvasWidth,
+						height: canvasHeight,
+						customizationSettings,
+						elements: ElementsRef.current,
+						canvas: ToolsCanvasRef.current,
+						ctx: ToolsCanvasCtxRef.current,
+						hoveredElementIndex: HoveredElementIndexRef.current,
+						selectedElementIndex: SelectedElementIndexRef.current,
+					});
+				}
+			})
+			.catch(() => {});
+	}, [fonts]);
+
 	return (
 		<div className={classNames({ 'editor-content-canvas-wrapper': true })}>
 			<canvas
@@ -1169,6 +1205,28 @@ export default ({
 				ref={(ref) => (SupportCanvasRef.current = ref)}
 				className={classNames({ 'editor-content-canvas-support': true })}
 			/>
+			{fonts && fonts.length ? (
+				<style
+					dangerouslySetInnerHTML={{
+						__html: fonts
+							.filter((font) => !font.loaded)
+							.map((v) => `@font-face {font-family: "${v.family}";src: url("${v.url}");}`)
+							.join('\n'),
+					}}
+				/>
+			) : null}
+
+			{fonts && fonts.length
+				? fonts.map((v, i) => (
+						<span
+							key={i}
+							style={{ fontFamily: v.family }}
+							className={classNames({ 'hidden-font-load': true })}
+						>
+							{v.family}
+						</span>
+					))
+				: null}
 		</div>
 	);
 };

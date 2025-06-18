@@ -27,7 +27,6 @@ export default React.memo(
 		element,
 		customization,
 		customizationSettings,
-		fonts = [],
 		selectElement,
 		deleteElement,
 		duplicateElement,
@@ -36,6 +35,7 @@ export default React.memo(
 	}) => {
 		const selectedElement = useReduxState((s) => s.editorManager.content.selectedElement);
 		const [ShowDeleteAlert, SetShowDeleteAlert] = React.useState(false);
+		const fonts = useReduxState((s) => s.editorManager.content.fonts);
 		const dispatch = useReduxDispatch();
 		const { t } = useTranslation();
 

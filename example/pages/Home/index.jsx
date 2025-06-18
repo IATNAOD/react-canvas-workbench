@@ -4,6 +4,7 @@ import uuid4 from 'uuid4';
 import React from 'react';
 
 import {
+	useFonts,
 	useContent,
 	useHistory,
 	useSettings,
@@ -18,6 +19,11 @@ export default ({}) => {
 	const { current, list, index, canUndo, canRedo, undo, redo, reset } = useHistory();
 	const { elements, selectedElementId, changeElements } = useContent();
 	const { settings, changeSettings, resetSettings } = useSettings();
+	const { fonts, setFonts, addDefaultFonts } = useFonts();
+
+	React.useEffect(() => {
+		console.log({ fonts });
+	}, [fonts]);
 
 	React.useEffect(() => {
 		console.log({ customization });
@@ -66,8 +72,15 @@ export default ({}) => {
 			updater: (state) => ({ ...state, openTypesButtonBackgroundColor: 'wheat' }),
 		});
 
+		setFonts([
+			{ family: 'montserrat', loaded: true },
+			{ family: 'Fiolex Mephisto', url: 'https://fonts.cdnfonts.com/s/8428/Fiolex_Mephisto.woff' },
+		]);
+
 		setTimeout(() => {
 			changeSettings({ handleSize: 16 });
+
+			addDefaultFonts();
 		}, 1000);
 
 		setTimeout(() => {

@@ -13,6 +13,7 @@ import {
 
 const initialState = {
 	content: {
+		fonts: [],
 		width: 3200,
 		height: 1600,
 		elements: [],

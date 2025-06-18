@@ -9,3 +9,4 @@ export { default as ColorPicker } from './components/ColorPicker';
 export { default as useSettings } from './hooks/useSettings';
 export { default as useContent } from './hooks/useContent';
 export { default as useHistory } from './hooks/useHistory';
+export { default as useFonts } from './hooks/useFonts';
