@@ -11,12 +11,11 @@ import DefaultInput from '../../Inputs/DefaultInput';
 
 import PadlockUnlockedIcon from '../../Icons/PadlockUnlockedIcon';
 import PadlockLockedIcon from '../../Icons/PadlockLockedIcon';
+import ImageElementIcon from '../../Icons/ImageElementIcon';
 import UploadImageIcon from '../../Icons/UploadImageIcon';
 import NotVisibleIcon from '../../Icons/NotVisibleIcon';
 import DuplicateIcon from '../../Icons/DuplicateIcon';
 import VisibleIcon from '../../Icons/VisibleIcon';
-
-import ImageElementImage from 'url:../../../assets/images/image-element.png';
 
 import { changeEditorContentField, changeEditorContentFields } from '../../../store/actions/editor';
 
@@ -86,17 +85,28 @@ export default React.memo(
 					}}
 					className={classNames({ 'elements-menu-list-item-header': true })}
 				>
-					<div className={classNames({ 'elements-menu-list-item-image-wrapper': true })}>
-						<img
-							className={classNames({ 'elements-menu-list-item-image': true })}
-							src={
-								selectedElement && selectedElement.id == element.id && selectedElement.image
-									? selectedElement.image.src
-									: element.image
-										? element.image.src
-										: ImageElementImage
-							}
-						/>
+					<div
+						className={classNames({
+							'elements-menu-list-item-image-wrapper': true,
+							real: (selectedElement && selectedElement.id == element.id && selectedElement.image) || element.image,
+						})}
+					>
+						{(selectedElement && selectedElement.id == element.id && selectedElement.image) || element.image ? (
+							<img
+								className={classNames({ 'elements-menu-list-item-image': true })}
+								src={
+									selectedElement && selectedElement.id == element.id && selectedElement.image
+										? selectedElement.image.src
+										: element.image.src
+								}
+							/>
+						) : (
+							<ImageElementIcon
+								width={30}
+								height={30}
+								fill={customization.listItemControlsIconColor || customizationSettings.listItemControlsIconColor}
+							/>
+						)}
 					</div>
 					<span className={classNames({ 'elements-menu-list-item-name': true })}>{t('elements-menu.element-types.image')}</span>
 					<div

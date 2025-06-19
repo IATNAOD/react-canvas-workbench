@@ -14,11 +14,10 @@ import ColorPicker from '../../ColorPicker';
 
 import PadlockUnlockedIcon from '../../Icons/PadlockUnlockedIcon';
 import PadlockLockedIcon from '../../Icons/PadlockLockedIcon';
+import TextElementIcon from '../../Icons/TextElementIcon';
 import NotVisibleIcon from '../../Icons/NotVisibleIcon';
 import DuplicateIcon from '../../Icons/DuplicateIcon';
 import VisibleIcon from '../../Icons/VisibleIcon';
-
-import TextElementImage from 'url:../../../assets/images/text-element.png';
 
 import { changeEditorContentField, changeEditorContentFields } from '../../../store/actions/editor';
 
@@ -66,10 +65,11 @@ export default React.memo(
 					}}
 					className={classNames({ 'elements-menu-list-item-header': true })}
 				>
-					<div className={classNames({ 'elements-menu-list-item-image-wrapper': true })}>
-						<img
-							src={TextElementImage}
-							className={classNames({ 'elements-menu-list-item-image': true })}
+					<div className={classNames({ 'elements-menu-list-item-text-wrapper': true })}>
+						<TextElementIcon
+							width={30}
+							height={30}
+							fill={customization.listItemControlsIconColor || customizationSettings.listItemControlsIconColor}
 						/>
 					</div>
 					<span className={classNames({ 'elements-menu-list-item-name': true })}>
