@@ -13,6 +13,10 @@
 	"types": "types/index.d.ts",
 	"style": "build/index.cjs.css",
 	"type": "module",
+	"funding": {
+		"type": "individual",
+		"url": "https://www.donationalerts.com/r/iatnaod"
+	},
 	"scripts": {
 		"build:types": "tsc -p types-config.json",
 		"example": "cross-env NODE_ENV=dev parcel example/index.html",

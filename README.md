@@ -71,7 +71,8 @@ export default () => {
 1. Copy the contents of the example folder
 2. Initialize the project by typing **yarn init -y**
 3. Type **yarn install react react-dom react-canvas-workbench** and **yarn add --dev parcel**
-4. Run the project **yarn parcel index.html**
+4. Replace **../../../src/index** with **react-canvas-workbench** in **pages/Home/index.js**
+5. Run the project **yarn parcel index.html**
 
 ## Usage
 
