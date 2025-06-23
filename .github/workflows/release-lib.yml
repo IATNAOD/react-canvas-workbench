@@ -34,17 +34,34 @@ jobs:
           cp    package.json release/
           cp    README.md    release/
 
-      - name: Push dist to public repo
-        uses: cpina/github-action-push-to-another-repository@v2
+      - name: Push to public repo (native git)
         env:
-          API_TOKEN_GITHUB: ${{ secrets.PUBLIC_REPO_PAT }}
-        with:
-          source-directory: 'release'
-          destination-github-username: 'IATNAOD'
-          destination-repository-name: 'react-canvas-workbench'
-          target-branch: main
-          user-email: 'iatnaod@iatnaod.space'
-          commit-message: 'Release ${{ github.ref_name }}'
+          TARGET_REPO: IATNAOD/react-canvas-workbench
+          TARGET_BRANCH: main
+          PAT: ${{ secrets.PUBLIC_REPO_PAT }}
+          GIT_AUTHOR_NAME: IATNAOD
+          GIT_AUTHOR_EMAIL: iatnaod@iatnaod.space
+        run: |
+          cd release
+          git init -b $TARGET_BRANCH
+          git remote add origin https://${PAT}@github.com/${TARGET_REPO}.git
+
+          # Попробуем забрать существующую историю, чтобы не стирать старое (не критично)
+          git fetch origin $TARGET_BRANCH --depth=1 || true
+          git reset --mixed origin/$TARGET_BRANCH || true
+
+          # Копируем/добавляем файлы
+          git add .
+
+          # Если изменений нет — просто выходим
+          if git diff --cached --quiet; then
+            echo "No changes to publish"
+            exit 0
+          fi
+
+          git -c user.name="$GIT_AUTHOR_NAME" -c user.email="$GIT_AUTHOR_EMAIL" \
+              commit -m "Release ${{ github.ref_name }}"
+          git push --set-upstream origin $TARGET_BRANCH
 
       - name: Publish to npm
         env:
