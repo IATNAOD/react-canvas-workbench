@@ -20,10 +20,18 @@ jobs:
           cache: npm
           registry-url: https://registry.npmjs.org/
 
-      - run: npm ci
+      - name: Install dependencies
+        run: yarn install
 
-      - run: npm run build:types
-      - run: npm run build:dist
+      - name: Fill in .env
+        run: |
+          echo 'USE_LOGGER=${{ vars.USE_LOGGER }}' > .env
+
+      - name: Build types
+        run: yarn build:types
+
+      - name: Build dist
+        run: yarn build:dist
 
       - name: Create release folder
         run: |
@@ -36,7 +44,7 @@ jobs:
           cp    package.json release/
           cp    README.md    release/
 
-      - name: Push to public repo (native git)
+      - name: Push to public repo
         env:
           TARGET_REPO: IATNAOD/react-canvas-workbench
           TARGET_BRANCH: main
@@ -48,14 +56,11 @@ jobs:
           git init -b $TARGET_BRANCH
           git remote add origin https://${PAT}@github.com/${TARGET_REPO}.git
 
-          # Попробуем забрать существующую историю, чтобы не стирать старое (не критично)
           git fetch origin $TARGET_BRANCH --depth=1 || true
           git reset --mixed origin/$TARGET_BRANCH || true
 
-          # Копируем/добавляем файлы
           git add .
 
-          # Если изменений нет — просто выходим
           if git diff --cached --quiet; then
             echo "No changes to publish"
             exit 0
