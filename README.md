@@ -33,8 +33,9 @@ We're hard at work on a premium tier of **react-canvas-workbench** that will giv
 | **Priority Updates & Fixes** | Subscribers receive new features, optimizations, and patches first-shipped continuously as soon as they clear CI |
 | **Feature Request Pool** | Suggest new capabilities or up-vote existing ideas. We snapshot the pool at regular intervals; items with the most votes jump to the top of the roadmap |
 
-> **Stay tuned!**  
-> Watch the repository to be the first to know when the Extended version launches
+> Stay tuned! Watch the repository to be the first to know when the Extended version launches
+
+> **And you can already support me with a donation, all early sponsors will receive a reward, you can see it [on this page](https://www.donationalerts.com/r/iatnaod)**
 
 ## Installation
 
