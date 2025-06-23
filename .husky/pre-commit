@@ -1,1 +1,1 @@
-yarn lint-staged && yarn build:types && yarn build:dist
+yarn lint-staged

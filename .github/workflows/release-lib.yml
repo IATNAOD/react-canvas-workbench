@@ -1,0 +1,52 @@
+name: Build & release bundle
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          registry-url: https://registry.npmjs.org/
+
+      - run: npm ci
+
+      - run: npm run build:types
+      - run: npm run build:dist
+
+      - name: Create release folder
+        run: |
+          rm -rf release
+          mkdir release
+          cp -r build        release/
+          cp -r types        release/
+          cp -r example      release/
+          cp -r licenses     release/
+          cp    package.json release/
+          cp    README.md    release/
+
+      - name: Push dist to public repo
+        uses: cpina/github-action-push-to-another-repository@v2
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.PUBLIC_REPO_PAT }}
+        with:
+          source-directory: 'release'
+          destination-github-username: 'IATNAOD'
+          destination-repository-name: 'react-canvas-workbench'
+          target-branch: main
+          user-email: 'iatnaod@iatnaod.space'
+          commit-message: 'Release ${{ github.ref_name }}'
+
+      - name: Publish to npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public

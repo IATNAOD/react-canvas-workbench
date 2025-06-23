@@ -10,8 +10,7 @@ export default () => {
 	const customization = useReduxState((s) => s.customizationManager);
 	const dispatch = useReduxDispatch();
 
-	const setCustomizationSettingsWrapper = ({ component, updater } = {}) =>
-		dispatch(setCustomizationSettings({ component, updater }));
+	const setCustomizationSettingsWrapper = ({ updater } = {}) => dispatch(setCustomizationSettings({ updater }));
 
 	const resetCustomizationSettingsWrapper = ({ component } = { component: 'all' }) =>
 		dispatch(resetCustomizationSettings({ component }));

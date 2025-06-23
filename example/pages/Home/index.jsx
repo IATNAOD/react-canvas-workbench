@@ -11,6 +11,7 @@ import {
 	ElementsMenu,
 	EditorCanvas,
 	EditorControls,
+	useTranslation,
 	useCustomization,
 } from '../../../src/index';
 
@@ -19,6 +20,7 @@ export default ({}) => {
 	const { current, list, index, canUndo, canRedo, undo, redo, reset } = useHistory();
 	const { elements, selectedElementId, changeElements } = useContent();
 	const { settings, changeSettings, resetSettings } = useSettings();
+	const { t, addResources, changeLanguage } = useTranslation();
 	const { fonts, setFonts, addDefaultFonts } = useFonts();
 
 	React.useEffect(() => {
@@ -66,6 +68,15 @@ export default ({}) => {
 		changeElements(initialElements);
 
 		reset({ elements: initialElements });
+
+		setCustomizationSettings({
+			updater: ({ editorControls, elementsMenu, editorCanvas, colorPicker }) => ({
+				...editorControls,
+				...elementsMenu,
+				...editorCanvas,
+				...colorPicker,
+			}),
+		});
 
 		changeCustomizationSettings({
 			component: 'elementsMenu',
