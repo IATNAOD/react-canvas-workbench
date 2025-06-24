@@ -91,9 +91,13 @@
 		"canvas-editor"
 	],
 	"files": [
+		"src",
 		"build",
 		"types",
 		"example",
-		"licenses"
+		"LICENSE",
+		"licenses",
+		"README.md",
+		"package.json"
 	]
 }

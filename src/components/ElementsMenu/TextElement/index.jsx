@@ -33,14 +33,70 @@ export default React.memo(
 		toggleElementVisibility,
 	}) => {
 		const selectedElement = useReduxState((s) => s.editorManager.content.selectedElement);
+		const canvasHeight = useReduxState((s) => s.editorManager.content.height);
+		const canvasWidth = useReduxState((s) => s.editorManager.content.width);
 		const [ShowDeleteAlert, SetShowDeleteAlert] = React.useState(false);
 		const fonts = useReduxState((s) => s.editorManager.content.fonts);
+		const TextCanvasCtxRef = React.useRef();
+		const TextCanvasRef = React.useRef();
 		const dispatch = useReduxDispatch();
 		const { t } = useTranslation();
 
 		const updateElement = (update = {}) => {
-			if (selectedElement && selectedElement.id == element.id)
-				dispatch(changeEditorContentField({ name: 'selectedElement', updater: { ...selectedElement, ...update } }));
+			if (selectedElement && selectedElement.id == element.id) {
+				const width = ![null, undefined].includes(update.width) ? update.width : selectedElement.width;
+				const content = ![null, undefined].includes(update.content) ? update.content : selectedElement.content;
+				const fontSize = ![null, undefined].includes(update.fontSize) ? update.fontSize : selectedElement.fontSize;
+				const lineHeight = ![null, undefined].includes(update.lineHeight) ? update.lineHeight : selectedElement.lineHeight;
+
+				TextCanvasCtxRef.current.font = `${fontSize}px "${selectedElement.fontFamily}"`;
+				TextCanvasCtxRef.current.fillStyle = selectedElement.color;
+
+				let line = '';
+				let lines = [];
+				const words = content.split(' ');
+
+				for (let i = 0; i < words.length; i++) {
+					if (words[i].includes('\n')) {
+						const splitedWords = words[i].split('\n');
+
+						for (let l = 0; l < splitedWords.length; l++) {
+							if (l > 0) {
+								lines.push(line.trim());
+
+								line = '';
+							}
+
+							line += splitedWords[l] + ' ';
+						}
+
+						continue;
+					}
+
+					let testLine = line + words[i] + ' ';
+
+					let testLineWidth = TextCanvasCtxRef.current.measureText(testLine).width;
+
+					if (testLineWidth > width && line !== '') {
+						lines.push(line.trim());
+
+						line = words[i] + ' ';
+					} else {
+						line = testLine;
+					}
+				}
+
+				lines.push(line.trim());
+
+				const height = lines.length * lineHeight;
+
+				dispatch(
+					changeEditorContentField({
+						name: 'selectedElement',
+						updater: { ...selectedElement, ...update, width, height, content, fontSize, lineHeight },
+					})
+				);
+			}
 		};
 
 		const updateElements = (update = {}) => {
@@ -53,6 +109,12 @@ export default React.memo(
 				})
 			);
 		};
+
+		React.useEffect(() => {
+			if (TextCanvasRef.current && !TextCanvasCtxRef.current) {
+				TextCanvasCtxRef.current = TextCanvasRef.current.getContext('2d');
+			}
+		}, []);
 
 		return (
 			<>
@@ -187,25 +249,25 @@ export default React.memo(
 							<DefaultInput
 								inputHeight={17}
 								placeholder={'12px'}
-								value={parseInt(selectedElement.x) || 0}
 								label={t('elements-menu.text-element.x-label')}
 								onBlur={() => (selectedElement.locked ? null : updateElements())}
 								onEnter={() => (selectedElement.locked ? null : updateElements())}
-								onChange={(e) => (selectedElement.locked ? null : updateElement({ x: parseInt(e.target.value) || 0 }))}
+								value={isNaN(parseInt(selectedElement.x)) ? '' : parseInt(selectedElement.x) || 0}
 								labelColor={customization.settingsLabelColor || customizationSettings.settingsLabelColor}
 								inputColor={customization.settingsInputColor || customizationSettings.settingsInputColor}
+								onChange={(e) => (selectedElement.locked ? null : updateElement({ x: parseInt(e.target.value) }))}
 								inputBackground={customization.settingsInputBackgroundColor || customizationSettings.settingsInputBackgroundColor}
 							/>
 							<DefaultInput
 								inputHeight={17}
 								placeholder={'12px'}
-								value={parseInt(selectedElement.y) || 0}
 								label={t('elements-menu.text-element.y-label')}
 								onBlur={() => (selectedElement.locked ? null : updateElements())}
 								onEnter={() => (selectedElement.locked ? null : updateElements())}
-								onChange={(e) => (selectedElement.locked ? null : updateElement({ y: parseInt(e.target.value) || 0 }))}
+								value={isNaN(parseInt(selectedElement.y)) ? '' : parseInt(selectedElement.y) || 0}
 								labelColor={customization.settingsLabelColor || customizationSettings.settingsLabelColor}
 								inputColor={customization.settingsInputColor || customizationSettings.settingsInputColor}
+								onChange={(e) => (selectedElement.locked ? null : updateElement({ y: parseInt(e.target.value) }))}
 								inputBackground={customization.settingsInputBackgroundColor || customizationSettings.settingsInputBackgroundColor}
 							/>
 						</div>
@@ -213,25 +275,25 @@ export default React.memo(
 							<DefaultInput
 								inputHeight={17}
 								placeholder={'12px'}
-								value={parseInt(selectedElement.width) || 0}
 								label={t('elements-menu.text-element.width-label')}
 								onBlur={() => (selectedElement.locked ? null : updateElements())}
 								onEnter={() => (selectedElement.locked ? null : updateElements())}
-								onChange={(e) => (selectedElement.locked ? null : updateElement({ width: parseInt(e.target.value) || 0 }))}
 								labelColor={customization.settingsLabelColor || customizationSettings.settingsLabelColor}
 								inputColor={customization.settingsInputColor || customizationSettings.settingsInputColor}
+								value={isNaN(parseInt(selectedElement.width)) ? '' : parseInt(selectedElement.width) || 0}
+								onChange={(e) => (selectedElement.locked ? null : updateElement({ width: parseInt(e.target.value) }))}
 								inputBackground={customization.settingsInputBackgroundColor || customizationSettings.settingsInputBackgroundColor}
 							/>
 							<DefaultInput
 								inputHeight={17}
 								placeholder={'12px'}
-								value={parseInt(selectedElement.lineHeight) || 0}
 								label={t('elements-menu.text-element.line-height-label')}
 								onBlur={() => (selectedElement.locked ? null : updateElements())}
 								onEnter={() => (selectedElement.locked ? null : updateElements())}
-								onChange={(e) => (selectedElement.locked ? null : updateElement({ lineHeight: parseInt(e.target.value) || 0 }))}
 								labelColor={customization.settingsLabelColor || customizationSettings.settingsLabelColor}
 								inputColor={customization.settingsInputColor || customizationSettings.settingsInputColor}
+								value={isNaN(parseInt(selectedElement.lineHeight)) ? '' : parseInt(selectedElement.lineHeight) || 0}
+								onChange={(e) => (selectedElement.locked ? null : updateElement({ lineHeight: parseInt(e.target.value) }))}
 								inputBackground={customization.settingsInputBackgroundColor || customizationSettings.settingsInputBackgroundColor}
 							/>
 						</div>
@@ -239,32 +301,25 @@ export default React.memo(
 							<DefaultInput
 								inputHeight={17}
 								placeholder={'12px'}
-								value={parseInt(selectedElement.fontSize) || 0}
 								label={t('elements-menu.text-element.font-size-label')}
 								onBlur={() => (selectedElement.locked ? null : updateElements())}
 								onEnter={() => (selectedElement.locked ? null : updateElements())}
-								onChange={(e) =>
-									selectedElement.locked
-										? null
-										: updateElement({
-												fontSize: parseInt(e.target.value) || 0,
-												lineHeight: parseInt(e.target.value) || 0,
-											})
-								}
 								labelColor={customization.settingsLabelColor || customizationSettings.settingsLabelColor}
 								inputColor={customization.settingsInputColor || customizationSettings.settingsInputColor}
+								value={isNaN(parseInt(selectedElement.fontSize)) ? '' : parseInt(selectedElement.fontSize) || 0}
+								onChange={(e) => (selectedElement.locked ? null : updateElement({ fontSize: parseInt(e.target.value) }))}
 								inputBackground={customization.settingsInputBackgroundColor || customizationSettings.settingsInputBackgroundColor}
 							/>
 							<DefaultInput
 								inputHeight={17}
 								placeholder={'12px'}
-								value={parseInt(selectedElement.rotate) || 0}
 								label={t('elements-menu.text-element.rotate-label')}
 								onBlur={() => (selectedElement.locked ? null : updateElements())}
 								onEnter={() => (selectedElement.locked ? null : updateElements())}
-								onChange={(e) => (selectedElement.locked ? null : updateElement({ rotate: parseInt(e.target.value) || 0 }))}
 								labelColor={customization.settingsLabelColor || customizationSettings.settingsLabelColor}
 								inputColor={customization.settingsInputColor || customizationSettings.settingsInputColor}
+								value={isNaN(parseInt(selectedElement.rotate)) ? '' : parseInt(selectedElement.rotate) || 0}
+								onChange={(e) => (selectedElement.locked ? null : updateElement({ rotate: parseInt(e.target.value) }))}
 								inputBackground={customization.settingsInputBackgroundColor || customizationSettings.settingsInputBackgroundColor}
 							/>
 						</div>
@@ -357,6 +412,12 @@ export default React.memo(
 						) : null}
 					</div>
 				) : null}
+				<canvas
+					width={canvasWidth}
+					height={canvasHeight}
+					ref={(ref) => (TextCanvasRef.current = ref)}
+					className={classNames({ 'elements-menu-list-item-canvas-text': true })}
+				/>
 			</>
 		);
 	}

@@ -8,7 +8,8 @@
 			"image": "Фото",
 			"text": "Текст",
 			"figure": "Фигура",
-			"background": "Фон"
+			"background": "Фон",
+			"canvas": "Холст"
 		},
 
 		"text-element": {
@@ -55,6 +56,11 @@
 
 		"background-element": {
 			"color-label": "Цвет фона"
+		},
+
+		"canvas-element": {
+			"brush-width-label": "Размер кисти",
+			"brush-color-label": "Цвет кисти"
 		},
 
 		"alerts": {

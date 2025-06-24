@@ -7,10 +7,10 @@
 ## Features
 
 - Out of the box, you can work with layers and elements, move, scale, rotate, etc.
+- Low-level access to functionality for advanced customization
 - Canvas functionality for drawing has been implemented
 - Advanced text manipulation, personal fonts
 - Ability to customize ready-made components
-- Low-level access to functionality for advanced customization
 
 ## TODO:
 
@@ -26,12 +26,13 @@ We're hard at work on a premium tier of **react-canvas-workbench** that will giv
 
 ### What's planned?
 
-| Benefit | How it helps you |
+| Benefit | What it unlocks for you |
 | --- | --- |
-| **Full Source Code Access** | Inspect, fork, and extend the codebase to fit any workflow without waiting on upstream releases |
-| **Expanded Feature Set** | • A larger suite of ready-made canvas components<br>• Additional hooks for fine-grained, low-level control<br>• Deep theming plus per-method overrides so you can swap out or augment internal helpers |
-| **Priority Updates & Fixes** | Subscribers receive new features, optimizations, and patches first-shipped continuously as soon as they clear CI |
-| **Feature Request Pool** | Suggest new capabilities or up-vote existing ideas. We snapshot the pool at regular intervals; items with the most votes jump to the top of the roadmap |
+| **Commercial-ready licence** | Freely **modify, fork, and integrate** the library in revenue-generating products **for your own use and for client-facing apps** |
+| **Expanded toolset** | • Larger collection of out-of-the-box canvas components<br>• Extra low-level hooks for fine-grained control<br>• Additional component-level customisation props<br>• Ability to override core helper functions for maximum flexibility |
+| **Scheduled enhancements & fixes** | Planned release cadence with regular feature additions, performance tweaks, and bug fixes delivered directly to paid customers |
+| **Feature-request pool access** | Create new feature requests or vote on existing ones. The request pool is snap-shotted at intervals, and items with the most votes rise to the top of the roadmap. Have a direct say in what we build next! |
+|  |  |
 
 > Stay tuned! Watch the repository to be the first to know when the Extended version launches
 

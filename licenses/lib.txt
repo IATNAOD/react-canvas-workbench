@@ -1,40 +1,43 @@
-FREE LICENSE FOR THE USE OF THE "react-canvas-workbench" LIBRARY
-Version 1.0 | Date: 23 June 2025
+FREE LICENSE FOR THE USE AND INTERNAL MODIFICATION OF "react-canvas-workbench"
+Version 1.3 | Date: 25 June 2025
 
 Developer: Alexey Sergeyevich Surov <IATNAOD>
 
 1. Definitions
-1.1 “Library” – the compiled (minified and/or obfuscated) JavaScript files and accompanying materials distributed through npm under the name “react-canvas-workbench.”
-1.2 “Developer” – Alexey Sergeyevich Surov <IATNAOD>.
-1.3 “User” – any individual or legal entity that obtains the Library and agrees to this License.
+1.1 "Library" - the source code, compiled files and all accompanying materials distributed under the name "react-canvas-workbench."
+1.2 "Developer" - Alexey Sergeyevich Surov <IATNAOD>.
+1.3 "User" - any individual or legal entity that obtains the Library and agrees to this License.
+1.4 "Internal Use" - use within the User’s own organization or personal projects, with no provision of the Library or derivative works to any third party.
+1.5 "Commercial Use" - any use of the Library or a derivative work in a product, service, or workflow that directly or indirectly generates revenue (including subscriptions, licences, advertising, or consulting fees).
 
 2. Grant of Rights
 The Developer grants the User a worldwide, royalty-free, non-exclusive, perpetual right to:
-a) install the Library;
-b) use the Library in the User’s own end products, whether commercial or non-commercial.
+a) download, install and use the Library;
+b) study and modify the Library’s source code solely for Internal Use, subject to Section 3.
 
 3. Restrictions
-The User must not:
-a) reverse-engineer, decompile, disassemble, de-obfuscate, or otherwise attempt to derive the source code;
-b) modify the Library or create derivative works based on it, except where mandatory law expressly allows;
-c) redistribute the Library as a stand-alone product or publish it in public repositories;
-d) rent, sell, sublicense, or otherwise transfer the Library or the rights granted herein to third parties.
+The User must not, without the Developer’s prior written consent:
+a) redistribute, publish, sell, rent, sublicense, host, make available, or otherwise transfer the Library or any derivative work to third parties;
+b) incorporate the Library or any derivative work into a competing or paid SDK, toolkit, or other developer product;
+c) remove or alter copyright notices or attribution contained in the original source files;
+d) misrepresent modified versions as the original Library;
+e) engage in Commercial Use of the Library or any derivative work unless the User first obtains a valid licence for the Paid Edition of the Library. Users unwilling to obtain such a licence must cease using the Library in all revenue-generating contexts.
 
 4. No Warranty
-The Library is provided “as is.” The Developer makes no express or implied warranties and is not liable for any direct, indirect, incidental, or consequential damages arising from the use of, or inability to use, the Library.
+The Library is provided "as is." The Developer disclaims all express and implied warranties and shall not be liable for any direct, indirect, incidental, or consequential damages arising from use of, or inability to use, the Library.
 
 5. Updates and Support
-5.1 The Developer may, at sole discretion, release updates.
-5.2 The User is not obliged to install updates; however, compatibility with outdated versions is not guaranteed.
+5.1 The Developer may release updates at sole discretion.
+5.2 The User is not obliged to install updates; compatibility with outdated versions is not guaranteed.
 
 6. Termination
-This License terminates automatically if the User breaches Section 3. Upon termination, the User must destroy all copies of the Library in their possession or control.
+This License terminates automatically if the User breaches Section 3. Upon termination, the User must destroy all copies of the Library and any derivatives in their possession or control.
 
-7. Modification of the License
-The Developer reserves the right to modify or replace this License at any time by publishing the revised text. Unless otherwise stated, the new version applies to any copy of the Library obtained after the publication date of the revision. Continued use of the Library after a revision is published constitutes acceptance of the new terms.
+7. License Changes
+The Developer reserves the right to modify or replace this License at any time by publishing a revised version. Unless expressly stated otherwise, the new terms apply to any copy of the Library obtained after the publication date. Continued use of the Library after publication constitutes acceptance of the revised terms.
 
 8. Miscellaneous
-8.1 If any provision of this License is held invalid or unenforceable, the remaining provisions will remain in full force and effect.
+8.1 If any provision of this License is held invalid or unenforceable, the remaining provisions remain in full force and effect.
 8.2 Nothing in this License limits any non-waivable statutory rights the User may have under applicable law.
 
 © 2025 Alexey Sergeyevich Surov <IATNAOD>. All rights reserved.

@@ -52,9 +52,7 @@ export default ({
 	const selectedElementId = useReduxState((s) => s.editorManager.content.selectedElementId);
 	const customizationSettings = useReduxState((s) => s.customizationManager.elementsMenu);
 	const [AddElementMenuOpened, SetAddElementMenuOpened] = React.useState(false);
-	const canvasHeight = useReduxState((s) => s.editorManager.content.height);
 	const elements = useReduxState((s) => s.editorManager.content.elements);
-	const canvasWidth = useReduxState((s) => s.editorManager.content.width);
 	const ElementsContainer = React.createRef();
 	const dispatch = useReduxDispatch();
 	const { t } = useTranslation();
@@ -63,12 +61,6 @@ export default ({
 		switch (type) {
 			case 'text': {
 				const fontSize = 40;
-				// const scale = width / 1600;
-
-				// ContentCanvasCtxRef.current.font = `${fontSize / scale}px "Arial"`;
-				// ContentCanvasCtxRef.current.fillStyle = '#000000';
-
-				// let width = ContentCanvasCtxRef.current.measureText('Text').width * scale;
 
 				dispatch(
 					changeEditorContentField({
@@ -78,7 +70,7 @@ export default ({
 							{
 								x: 0,
 								y: 0,
-								width: 100,
+								width: 150,
 								rotate: 0,
 								id: uuid4(),
 								type: 'text',

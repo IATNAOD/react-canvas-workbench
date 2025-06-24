@@ -8,7 +8,8 @@
 			"image": "Image",
 			"text": "Text",
 			"figure": "Shape",
-			"background": "Background"
+			"background": "Background",
+			"canvas": "Canvas"
 		},
 
 		"text-element": {
@@ -55,6 +56,11 @@
 
 		"background-element": {
 			"color-label": "Background color"
+		},
+
+		"canvas-element": {
+			"brush-width-label": "Brush size",
+			"brush-color-label": "Brush color"
 		},
 
 		"alerts": {
